@@ -1,31 +1,46 @@
 const {
   PG_PORT,
   HOST,
-  DATABASE_NAME,
+  DATABASE_MAIN,
+  DATABASE_TESTING,
   PG_USERNAME,
   PG_PASSWORD
 } = require("./config")
 
+const sharedConfig = {
+  client: "pg",
+  useNullAsDefault: true,
+  connection: {
+    port: PG_PORT,
+    host: HOST,
+    user: PG_USERNAME,
+    password: PG_PASSWORD
+  },
+  migrations: {
+    directory: "./data/migrations",
+    tableName: "knex_migrations"
+  },
+  seeds: {
+    directory: "./data/seeds"
+  }
+}
+
 module.exports = {
   development: {
-    client: "postgresql",
+    ...sharedConfig,
     connection: {
-      port: PG_PORT,
-      host: HOST,
-      database: DATABASE_NAME,
-      user: PG_USERNAME,
-      password: PG_PASSWORD
-    },
-    pool: {
-      min: 2,
-      max: 10
-    },
-    migrations: {
-      directory: "./data/migrations",
-      tableName: "knex_migrations"
-    },
-    seeds: {
-      directory: "./data/seeds"
+      ...sharedConfig.connection,
+      database: DATABASE_MAIN
     }
   },
+  testing: {
+    ...sharedConfig,
+    connection: {
+      ...sharedConfig.connection,
+      database: DATABASE_TESTING
+    }
+  },
+  production: {
+    ...sharedConfig
+  }
 }

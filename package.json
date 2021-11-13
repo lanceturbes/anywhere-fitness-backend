@@ -1,7 +1,7 @@
 {
-  "name": "postgres-practice",
-  "version": "1.0.0",
-  "description": "",
+  "name": "anywhere-fitness-backend",
+  "version": "0.2.1",
+  "description": "This is the backend repository for Lambda School's \"Build Week\" Full-Time program, Group #5",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -13,8 +13,8 @@
     "test": "cross-env NODE_ENV=testing jest --verbose --watchAll"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Students at Lambda School",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^27.0.2",
     "cross-env": "^7.0.3",

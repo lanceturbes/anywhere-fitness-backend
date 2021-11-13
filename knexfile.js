@@ -1,10 +1,10 @@
-require("dotenv").config()
-
-const PG_PORT = process.env.PG_PORT || 5432
-const HOST = process.env.HOST || "localhost"
-const DATABASE_NAME = process.env.DATABASE_NAME || "anywherefitness-bwft5"
-const PG_USERNAME = process.env.PG_USERNAME
-const PG_PASSWORD = process.env.PG_PASSWORD
+const {
+  PG_PORT,
+  HOST,
+  DATABASE_NAME,
+  PG_USERNAME,
+  PG_PASSWORD
+} = require("./config")
 
 module.exports = {
   development: {

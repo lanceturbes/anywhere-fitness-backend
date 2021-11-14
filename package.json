@@ -3,6 +3,10 @@
   "version": "0.2.1",
   "description": "This is the backend repository for Lambda School's \"Build Week\" Full-Time program, Group #5",
   "main": "index.js",
+  "engines": {
+    "node": "16.x",
+    "npm": "8.x"
+  },
   "scripts": {
     "start": "node index.js",
     "server": "nodemon index.js",

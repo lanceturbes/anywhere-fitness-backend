@@ -2,6 +2,9 @@ const db = require("../../data/db-config")
 
 const getAll = async () => {
   const users = await db("users")
+    .select("user_id",
+      "username",
+      "email")
   return users
 }
 

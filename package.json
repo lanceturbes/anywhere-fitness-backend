@@ -3,6 +3,10 @@
   "version": "0.2.1",
   "description": "This is the backend repository for Lambda School's \"Build Week\" Full-Time program, Group #5",
   "main": "index.js",
+  "engines": {
+    "node": "16.x",
+    "npm": "8.x"
+  },
   "scripts": {
     "start": "node index.js",
     "server": "nodemon index.js",
@@ -10,7 +14,12 @@
     "rollback": "knex migrate:rollback",
     "seed": "knex seed:run",
     "resetdb": "npm run rollback; npm run migrate; npm run seed",
-    "test": "cross-env NODE_ENV=testing jest --verbose --watchAll"
+    "test": "cross-env NODE_ENV=testing jest --verbose --watchAll",
+    "migrateh": "heroku run knex migrate:latest -a anywhere-fitness-bwft5",
+    "rollbackh": "heroku run knex migrate:rollback -a anywhere-fitness-bwft5",
+    "databaseh": "heroku pg:psql -a anywhere-fitness-bwft5",
+    "seedh": "heroku run knex seed:run -a anywhere-fitness-bwft5",
+    "deploy": "git push heroku main"
   },
   "keywords": [],
   "author": "Students at Lambda School",
@@ -18,7 +27,6 @@
   "devDependencies": {
     "@types/jest": "^27.0.2",
     "cross-env": "^7.0.3",
-    "dotenv": "^10.0.0",
     "eslint": "^8.2.0",
     "jest": "^27.3.1",
     "nodemon": "^2.0.15",
@@ -27,10 +35,12 @@
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "helmet": "^4.6.0",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.14",
+    "knex-cleaner": "^1.3.1",
     "pg": "^8.7.1",
     "yup": "^0.32.11"
   }

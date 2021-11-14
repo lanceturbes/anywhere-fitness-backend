@@ -21,6 +21,10 @@ test("sanity check", () => {
   expect(5 + 2).toBe(7)
 })
 
+it("is using the testing environment", async () => {
+  expect(process.env.NODE_ENV).toBe("testing")
+})
+
 describe("[POST] /api/auth/register", () => {
   describe("success", () => {
     let registration
@@ -121,7 +125,7 @@ describe("[POST] /api/auth/register", () => {
 
       it("returns 'username taken' when username already in use", async () => {
         const expected = /username taken/i
-        registration.username = "willie-wonka"
+        registration.username = "secretivechinchilla94"
 
         const res = await request(server)
           .post("/api/auth/register")
@@ -245,7 +249,10 @@ describe("[POST] /api/auth/login", () => {
   describe("success", () => {
     let login
     beforeEach(() => {
-      login = { username: "willie-wonka", password: "fun-times-ahead" }
+      login = {
+        username: "secretivechinchilla94",
+        password: "secretivechinchilla94"
+      }
     })
 
     it("responds with status code 200 upon successful login", async () => {
@@ -260,7 +267,7 @@ describe("[POST] /api/auth/login", () => {
     })
 
     it("returns a welcome message and a login token", async () => {
-      const expectedMessage = /welcome, willie-wonka/i
+      const expectedMessage = /welcome, secretivechinchilla94/i
 
       const res = await request(server)
         .post("/api/auth/login")

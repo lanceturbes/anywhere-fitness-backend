@@ -24,7 +24,6 @@ const add = async (user) => {
     .returning([
       "user_id",
       "username",
-      "password",
       "email"
     ])
   const newUser = insertResult[0]

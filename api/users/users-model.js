@@ -10,9 +10,6 @@ const getAll = async () => {
 
 const getById = async (id) => {
   const user = await db("users")
-    .select("user_id",
-      "username",
-      "email")
     .where({ user_id: id })
     .first()
   return user
@@ -20,9 +17,6 @@ const getById = async (id) => {
 
 const filterBy = async (filter) => {
   const filteredUsers = await db("users")
-    .select("user_id",
-      "username",
-      "email")
     .where(filter)
   return filteredUsers
 }

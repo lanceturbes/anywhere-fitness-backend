@@ -21,6 +21,10 @@ test("sanity check", () => {
   expect(5 + 2).toBe(7)
 })
 
+it("is using the testing environment", async () => {
+  expect(process.env.NODE_ENV).toBe("testing")
+})
+
 describe("[POST] /api/auth/register", () => {
   describe("success", () => {
     let registration

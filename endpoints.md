@@ -64,25 +64,22 @@ Endpoints starting with `/api/users` are for fetching user information.
 
 **Endpoint**: `[GET] /api/users`
 
-**Output**: on success, returns an array of objects containing all the users in the database; this is for development purposes, and will likely go unused in the final release
+**Output**: on success, returns an array of objects containing all the users in the database; this is for development purposes, and will likely go unused in the final release (the users depicted are not real -- they are listed for demonstrational purposes)
 
 ```
 [
   {
     "email": "willie@wonka.com",
-    "password": "$2a$06$GpPRvzwBls/o5Ixmv9jgEOHgR6wL08EZCjMfd5uK4mOan7RtVdVlm",
     "user_id": 1,
     "username": "willie-wonka"
   },
   {
     "email": "pebbles@thecursediterator.net",
-    "password": "$2a$06$JwUBB7BzdMC9XKaMu4dPp.ObsMjelOEfYqhvSm/bihtdIYNzBCNtm",
     "user_id": 2,
     "username": "five-pebbles"
   },
   {
     "email": "highking@windhelm.net",
-    "password": "$2a$06$I/RDKeqftecWTrkfM/cML.kOHThOAQbeldYIiv7xqySbO7q.SRDvG",
     "user_id": 3,
     "username": "ulfric-stormcloak"
   }

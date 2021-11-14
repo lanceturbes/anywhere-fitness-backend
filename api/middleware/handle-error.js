@@ -1,6 +1,6 @@
 const { NODE_ENV } = require("../../config")
 
-const handleError = (err, req, res, next) => {
+const handleError = (err, req, res, next) => { // eslint-disable-line
   res.status(err.status || 500).json({
     message: NODE_ENV === "production"
       ? "Oh, d-d-d-dear!"

@@ -1,7 +1,7 @@
 const User = require("../users/users-model")
 
 const checkUserExists = async (req, res, next) => {
-  const { username } = req.custom_login
+  const { username } = req.body
   const users = await User.filterBy({ username })
   if (users.length === 0) {
     next({
@@ -15,7 +15,7 @@ const checkUserExists = async (req, res, next) => {
 }
 
 const checkUsernameTaken = async (req, res, next) => {
-  const { username } = req.custom_registration
+  const { username } = req.body
   const users = await User.filterBy({ username })
   if (users.length !== 0) {
     next({

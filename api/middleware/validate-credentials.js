@@ -6,12 +6,7 @@ const {
 const validateRegistration = async (req, res, next) => {
   try {
     const payload = req.body
-    const validatedPayload = await registerSchema.validate(payload)
-    req.custom_registration = {
-      username: validatedPayload.username,
-      password: validatedPayload.password,
-      email: validatedPayload.email
-    }
+    await registerSchema.validate(payload)
     next()
   } catch (err) {
     next({
@@ -24,8 +19,7 @@ const validateRegistration = async (req, res, next) => {
 const validateLogin = async (req, res, next) => {
   try {
     const payload = req.body
-    const validatedPayload = await loginSchema.validate(payload)
-    req.custom_login = validatedPayload
+    await loginSchema.validate(payload)
     next()
   } catch (err) {
     next({

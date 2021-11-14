@@ -10,7 +10,12 @@
     "rollback": "knex migrate:rollback",
     "seed": "knex seed:run",
     "resetdb": "npm run rollback; npm run migrate; npm run seed",
-    "test": "cross-env NODE_ENV=testing jest --verbose --watchAll"
+    "test": "cross-env NODE_ENV=testing jest --verbose --watchAll",
+    "migrateh": "heroku run knex migrate:latest -a anywhere-fitness-bwft5",
+    "rollbackh": "heroku run knex migrate:rollback -a anywhere-fitness-bwft5",
+    "databaseh": "heroku pg:psql -a anywhere-fitness-bwft5",
+    "seedh": "heroku run knex seed:run -a anywhere-fitness-bwft5",
+    "deploy": "git push heroku main"
   },
   "keywords": [],
   "author": "Students at Lambda School",

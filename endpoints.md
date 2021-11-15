@@ -93,3 +93,20 @@ Endpoints starting with `/api/users` are for fetching user information.
   }
 ]
 ```
+
+### Get User By ID
+
+**Endpoint**: `[GET] /api/users/:id`
+
+**Parameters**: `:id` must be an integer
+
+**Output**: if a user with the id provided in the URL parameter exists, their information will be outputted as an object in the following format...
+
+```
+{
+  "email": "highking@windhelm.net",
+  "name": "Ulfric Stormcloak",
+  "user_id": 3,
+  "username": "ulfric-stormcloak"
+}
+```

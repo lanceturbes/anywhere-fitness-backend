@@ -2,7 +2,7 @@ const request = require("supertest")
 
 const server = require("./server")
 const db = require("../data/db-config")
-// const seededUsers = require("../data/seeds/001-users")
+const { testUsers } = require("../data/seeds-testing/002-users")
 
 // Wipe the test database before running any of the tests
 beforeAll(async () => {
@@ -327,5 +327,26 @@ describe("[POST] /api/auth/login", () => {
 
       expect(actual).toMatch(expected)
     })
+  })
+})
+
+describe("[GET] /api/users", () => {
+  let res
+  beforeAll(async () => {
+    res = await request(server).get("/api/users")
+  })
+
+  it("responds with status code 200", async () => {
+    const expected = 200
+    const actual = res.status
+    expect(actual).toBe(expected)
+  })
+
+  it("returns an array of all currently registered users", async () => {
+    const expected = testUsers.map((user) => {
+      return { email: user.email, username: user.username }
+    })
+    const actual = res.body
+    expect(actual).toMatchObject(expected)
   })
 })

@@ -4,6 +4,18 @@ const registerSchema = yup.object().shape({
   user_id: yup
     .mixed()
     .oneOf([undefined], "user_id must not be provided"),
+  first_name: yup
+    .string()
+    .trim()
+    .required("first name is required")
+    .min(3, "invalid first name")
+    .max(64, "invalid first name"),
+  last_name: yup
+    .string()
+    .trim()
+    .required("last name is required")
+    .min(3, "invalid last name")
+    .max(64, "invalid last name"),
   username: yup
     .string()
     .trim()

@@ -360,3 +360,87 @@ describe("[GET] /api/users/:id", () => {
     })
   })
 })
+
+describe("[GET] /api/classes", () => {
+  it("responds with status code 200", async () => {
+    const expected = 200
+    const res = await request(server).get("/api/classes")
+    const actual = res.status
+    expect(actual).toBe(expected)
+  })
+  it("returns an array of all current classes", async () => {
+    const expected = [
+      {
+        class_id: 1,
+        instructor: "John Snow",
+        name: "Castle Black Combat",
+        type: "Strength",
+        start_time: "05:00",
+        duration: 120,
+        intensity: "high",
+        location: "The Wall",
+        attendees: 47,
+        max_class_size: 64
+      },
+      {
+        class_id: 2,
+        instructor: "Mario",
+        name: "Mario's Run",
+        type: "Endurance",
+        start_time: "07:00",
+        duration: 80,
+        intensity: "medium",
+        location: "Koopa Troopa Beach",
+        attendees: 14,
+        max_class_size: 32
+      }
+    ]
+    const res = await request(server).get("/api/classes")
+    const actual = res.body
+    expect(actual).toEqual(expected)
+  })
+})
+
+describe("[GET] /api/classes/:id", () => {
+  describe("success", () => {
+    it("responds with status code 200", async () => {
+      const expected = 200
+      const res = await request(server).get("/api/classes/2")
+      const actual = res.status
+      expect(actual).toBe(expected)
+    })
+    it("returns fitness class object of the given ID", async () => {
+      const expected = {
+        class_id: 2,
+        instructor: "Mario",
+        name: "Mario's Run",
+        type: "Endurance",
+        start_time: "07:00",
+        duration: 80,
+        intensity: "medium",
+        location: "Koopa Troopa Beach",
+        attendees: 14,
+        max_class_size: 32
+      }
+      const res = await request(server).get("/api/classes/2")
+      const actual = res.body
+      expect(actual).toEqual(expected)
+    })
+  })
+
+  describe("failure", () => {
+    it("responds with status code 404", async () => {
+      const expected = 404
+      const res = await request(server).get("/api/classes/300")
+      const actual = res.status
+      expect(actual).toBe(expected)
+    })
+
+    it("returns message 'class not found'", async () => {
+      const expected = /class not found/i
+      const res = await request(server).get("/api/classes/300")
+      const actual = res.body.message
+      expect(actual).toMatch(expected)
+    })
+  })
+})

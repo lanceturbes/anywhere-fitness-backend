@@ -2,7 +2,7 @@
 
 The current endpoints for this backend are described, below.
 
-At the time of writing, the API is currently [live on Heroku](https://anywhere-fitness-bwft5.herokuapp.com/)! (Current Version: **v0.3.6**) Just append an endpoint of choice to the URL (for example, <https://anywhere-fitness-bwft5.herokuapp.com/api/users> if you want to get the list of all registered users).
+At the time of writing, the API is currently [live on Heroku](https://anywhere-fitness-bwft5.herokuapp.com/)! Just append an endpoint of choice to the URL (for example, <https://anywhere-fitness-bwft5.herokuapp.com/api/users> if you want to get the list of all registered users).
 
 --------------------------------------------------------------------------------
 

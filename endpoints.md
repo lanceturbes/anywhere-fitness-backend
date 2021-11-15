@@ -2,7 +2,7 @@
 
 The current endpoints for this backend are described, below.
 
-At the time of writing, the API is currently [live on Heroku](https://anywhere-fitness-bwft5.herokuapp.com/)! (Current Version: **v0.3.0**) Just append an endpoint of choice to the URL (for example, <https://anywhere-fitness-bwft5.herokuapp.com/api/users> if you want to get the list of all registered users).
+At the time of writing, the API is currently [live on Heroku](https://anywhere-fitness-bwft5.herokuapp.com/)! (Current Version: **v0.3.6**) Just append an endpoint of choice to the URL (for example, <https://anywhere-fitness-bwft5.herokuapp.com/api/users> if you want to get the list of all registered users).
 
 --------------------------------------------------------------------------------
 
@@ -18,6 +18,8 @@ Endpoints starting with `/api/auth` are related to the login/sign-up process.
 
 Key          | Type   | Required | Notes
 ------------ | ------ | -------- | -----------------------------------------------------------
+first_name   | string | yes      | must be between 3-64 characters long
+last_name    | string | yes      | must be between 3-64 characters long
 username     | string | yes      | must be unqiue, and between 6-32 characters long
 password     | string | yes      | must be between 8-64 characters long
 email        | string | yes      | must be formatted as a real email (i.e. address@email.com)
@@ -30,6 +32,7 @@ emailConfirm | string | yes      | must match the email provided in the `email` 
   "message": "New user registered, successfully!",
   "user": {
     "email": "highking@windhelm.net",
+    "name": "Ulfric Stormcloak",
     "user_id": 3,
     "username": "ulfric-stormcloak"
   }
@@ -72,16 +75,19 @@ Endpoints starting with `/api/users` are for fetching user information.
 [
   {
     "email": "willie@wonka.com",
+    "name": "Willie Wonka",
     "user_id": 1,
     "username": "willie-wonka"
   },
   {
     "email": "pebbles@thecursediterator.net",
+    "name": "Five Pebbles",
     "user_id": 2,
     "username": "five-pebbles"
   },
   {
     "email": "highking@windhelm.net",
+    "name": "Ulfric Stormcloak",
     "user_id": 3,
     "username": "ulfric-stormcloak"
   }

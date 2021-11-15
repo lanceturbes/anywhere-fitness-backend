@@ -45,10 +45,12 @@ describe("[POST] /api/auth/register", () => {
     let registration
     beforeEach(() => {
       registration = {
-        username: "sheogorath",
-        password: "TH3_M4D_PR1NC3",
-        email: "sheogorath@shiveringisles.net",
-        emailConfirm: "sheogorath@shiveringisles.net"
+        first_name: "Ulfric",
+        last_name: "Stormcloak",
+        username: "stormcloak",
+        password: "jarl-of-windhelm",
+        email: "highking@windhelm.net",
+        emailConfirm: "highking@windhelm.net"
       }
     })
 
@@ -59,6 +61,7 @@ describe("[POST] /api/auth/register", () => {
     it("returns a success message and the newly created user", async () => {
       const expectedMessage = /new user registered, successfully/i
       const expectedUser = {
+        name: registration.first_name + " " + registration.last_name,
         username: registration.username,
         email: registration.email
       }
@@ -78,14 +81,64 @@ describe("[POST] /api/auth/register", () => {
       await registerAndCheck("status", 400, registration)
     })
 
+    describe("name error messages", () => {
+      let registration
+      beforeEach(() => {
+        registration = {
+          first_name: "",
+          last_name: "",
+          username: "stormcloak",
+          password: "jarl-of-windhelm",
+          email: "highking@windhelm.net",
+          emailConfirm: "highking@windhelm.net"
+        }
+      })
+
+      it("returns 'first name is required' when first name is missing", async () => {
+        const expectedMessage = /first name is required/i
+        registration.last_name = "Stormcloak"
+        await registerAndCheck("message", expectedMessage, registration)
+      })
+
+      it("returns 'last name is required' when last name is missing", async () => {
+        const expectedMessage = /last name is required/i
+        registration.first_name = "Ulfric"
+        await registerAndCheck("message", expectedMessage, registration)
+      })
+
+      it("returns 'invalid first name' when too short/long", async () => {
+        const expectedMessage = /invalid first name/i
+        registration.last_name = "Stormcloak"
+
+        registration.first_name = "ab"
+        await registerAndCheck("message", expectedMessage, registration)
+
+        registration.first_name = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaah!"
+        await registerAndCheck("message", expectedMessage, registration)
+      })
+
+      it("returns 'invalid last name' when too short/long", async () => {
+        const expectedMessage = /invalid last name/i
+        registration.first_name = "Ulfric"
+
+        registration.last_name = "ab"
+        await registerAndCheck("message", expectedMessage, registration)
+
+        registration.last_name = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaah!"
+        await registerAndCheck("message", expectedMessage, registration)
+      })
+    })
+
     describe("username error messages", () => {
       let registration
       beforeEach(() => {
         registration = {
+          first_name: "Ulfric",
+          last_name: "Stormcloak",
           username: "",
-          password: "TH3_M4D_PR1NC3",
-          email: "sheogorath@shiveringisles.net",
-          emailConfirm: "sheogorath@shiveringisles.net"
+          password: "jarl-of-windhelm",
+          email: "highking@windhelm.net",
+          emailConfirm: "highking@windhelm.net"
         }
       })
 

@@ -63,7 +63,7 @@ password | string | yes      | password must be valid for the target user
 
 ## Classes
 
-Endpoints starting with `/api/classes` are for fetching information related to fitness classes.
+Endpoints starting with `/api/classes` are related to fitness class information.
 
 ### Get All Classes
 
@@ -75,28 +75,28 @@ Endpoints starting with `/api/classes` are for fetching information related to f
 [
   ...
   {
+    "attendees": 11,
     "class_id": 9,
-    "instructor": "Mr. Miyagi",
-    "name": "Zen Fitness",
-    "type": "Yoga",
-    "start_time": "08:00",
     "duration": 30,
+    "instructor": "Mr. Miyagi",
     "intensity": "low",
     "location": "Fancy Gardens",
-    "attendees": 11,
-    "max_class_size": 20
+    "max_class_size": 20,
+    "name": "Zen Fitness",
+    "start_time": "08:00",
+    "type": "Yoga"
   },
   {
+    "attendees": 18,
     "class_id": 10,
-    "instructor": "Intensity Man",
-    "name": "Shredders",
-    "type": "Strength Training",
-    "start_time": "13:00",
     "duration": 60,
+    "instructor": "Intensity Man",
     "intensity": "high",
     "location": "Muscle Gym",
-    "attendees": 18,
-    "max_class_size": 35
+    "max_class_size": 35,
+    "name": "Shredders",
+    "start_time": "13:00",
+    "type": "Strength Training"
   }
   ...
 ]
@@ -112,15 +112,16 @@ Endpoints starting with `/api/classes` are for fetching information related to f
 
 ```
 {
-  "class_id": 5,
-  "name": "Shredders",
-  "type": "Strength Training",
-  "start_time": "13:00",
+  "attendees": 18,
+  "class_id": 10,
   "duration": 60,
+  "instructor": "Intensity Man",
   "intensity": "high",
   "location": "Muscle Gym",
-  "attendees": 18,
-  "max_class_size": 35
+  "max_class_size": 35,
+  "name": "Shredders",
+  "start_time": "13:00",
+  "type": "Strength Training"
 }
 ```
 
@@ -147,16 +148,15 @@ max_class_size | integer | no       | defaults to 30
 {
   message: "Class created successfully!",
   class: {
-    "instructor_id": 1,
     "class_id": 12,
-    "name": "Koopa's Circuit",
-    "type": "Cardio",
-    "start_time": "05:00",
     "duration": 100,
+    "instructor_id": 1,
     "intensity": "high",
     "location": "Koopa Troopa Beach",
-    "attendees": 0,
-    "max_class_size": 50
+    "max_class_size": 50,
+    "name": "Koopa's Circuit",
+    "start_time": "05:00",
+    "type": "Cardio"
   }
 }
 ```
@@ -185,13 +185,13 @@ max_class_size | integer | defaults to 30
 {
   message: "Class edited successfully!",
   class: {
-    "name": "Troopa's Circuit",
-    "type": "Cardio",
-    "start_time": "08:00",
     "duration": 60,
     "intensity": "medium",
     "location": "Koopa Troopa Beach",
-    "max_class_size": 30
+    "max_class_size": 30,
+    "name": "Troopa's Circuit",
+    "start_time": "08:00",
+    "type": "Cardio"
   }
 }
 ```

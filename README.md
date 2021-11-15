@@ -1,6 +1,6 @@
 # Anywhere Fitness (Back End)
 
-Latest Version: 0.3.0
+Latest Version: 0.4.0 ([Patch Notes](https://github.com/WaywardPooch/anywhere-fitness-backend/pull/3))
 
 ## DISCLAIMER!
 

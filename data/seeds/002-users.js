@@ -1,5 +1,7 @@
 const users = [
   {
+    first_name: "Wayward",
+    last_name: "Pooch",
     username: "waywardpooch",
     password: "$2a$16$rmr6vB/MtELrFn38Ib/JKu1sS3OXmYrTrfUaLEZ2bXnVjKu3vuziO",
     email: "waywardpooch@placeholder.test"

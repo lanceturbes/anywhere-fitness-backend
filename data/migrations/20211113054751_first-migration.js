@@ -3,6 +3,10 @@ const up = async knex => {
     .createTable("users", table => {
       table.increments("user_id")
         .primary()
+      table.string("first_name", 64)
+        .notNullable()
+      table.string("last_name", 64)
+        .notNullable()
       table.string("username", 32)
         .notNullable()
         .unique()

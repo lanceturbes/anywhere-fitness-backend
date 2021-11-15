@@ -2,10 +2,15 @@ const db = require("../../data/db-config")
 
 const getAll = async () => {
   const users = await db("users")
-    .select("user_id",
-      "username",
-      "email")
-  return users
+  const displayedUsers = users.map(user => {
+    return {
+      user_id: user.user_id,
+      name: user.first_name + " " + user.last_name,
+      username: user.username,
+      email: user.email
+    }
+  })
+  return displayedUsers
 }
 
 const getById = async (id) => {
@@ -26,6 +31,8 @@ const add = async (user) => {
     .insert(user)
     .returning([
       "user_id",
+      "first_name",
+      "last_name",
       "username",
       "email"
     ])

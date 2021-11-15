@@ -18,15 +18,20 @@ router.post("/register",
   checkUsernameTaken,
   async (req, res, next) => {
     try {
-      const { username, password, email } = req.body
-      let registrationInfo = { username, password, email }
+      const { first_name, last_name, username, password, email } = req.body
+      let registrationInfo = { first_name, last_name, username, password, email }
       const hash = bcrypt.hashSync(registrationInfo.password, BCRYPT_ROUNDS)
       registrationInfo.password = hash
 
       const newUser = await User.add(registrationInfo)
       res.status(201).json({
         message: "New user registered, successfully!",
-        user: newUser
+        user: {
+          user_id: newUser.user_id,
+          name: first_name + " " + last_name,
+          username,
+          email
+        }
       })
     } catch (err) {
       next(err)

@@ -311,7 +311,11 @@ describe("[GET] /api/users", () => {
 
   it("returns an array of all currently registered users", async () => {
     const expected = testUsers.map((user) => {
-      return { email: user.email, username: user.username }
+      return {
+        name: user.first_name + " " + user.last_name,
+        email: user.email,
+        username: user.username
+      }
     })
     const actual = res.body
     expect(actual).toMatchObject(expected)

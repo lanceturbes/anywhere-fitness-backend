@@ -321,3 +321,42 @@ describe("[GET] /api/users", () => {
     expect(actual).toMatchObject(expected)
   })
 })
+
+describe("[GET] /api/users/:id", () => {
+  describe("success", () => {
+    it("responds with status code 200", async () => {
+      const expected = 200
+      const res = await request(server).get("/api/users/2")
+      const actual = res.status
+      expect(actual).toBe(expected)
+    })
+
+    it("returns an object with user data", async () => {
+      const expected = {
+        name: testUsers[1].first_name + " " + testUsers[1].last_name,
+        email: testUsers[1].email,
+        username: testUsers[1].username,
+        user_id: 2
+      }
+      const res = await request(server).get("/api/users/2")
+      const actual = res.body
+      expect(actual).toMatchObject(expected)
+    })
+  })
+
+  describe("failure", () => {
+    it("responds with status code 404", async () => {
+      const expected = 404
+      const res = await request(server).get("/api/users/100")
+      const actual = res.status
+      expect(actual).toBe(expected)
+    })
+
+    it("returns message 'user does not exist' when ID is invalid", async () => {
+      const expected = /user does not exist/i
+      const res = await request(server).get("/api/users/100")
+      const actual = res.body.message
+      expect(actual).toMatch(expected)
+    })
+  })
+})

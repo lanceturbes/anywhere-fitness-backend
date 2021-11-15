@@ -135,7 +135,7 @@ Key            | Type    | Required | Notes
 -------------- | ------- | -------- | -------------------------------------------
 instructor_id  | integer | yes      | ID of the instructor to assign the class to
 name           | string  | yes      | must be between 5-64 characters long
-type           | string  | yes      | must be between 3-32 characters long
+type           | integer | yes      | represents the fitness class category ID
 start_time     | string  | yes      | must be in `00:00` format
 duration       | integer | no       | time in minutes; defaults to 60
 intensity      | string  | yes      | must be either `low`, `medium`, or `high`
@@ -172,7 +172,7 @@ max_class_size | integer | no       | defaults to 30
 Key            | Type    | Notes
 -------------- | ------- | -----------------------------------------
 name           | string  | must be between 5-64 characters long
-type           | string  | must be between 3-32 characters long
+type           | integer | represents the fitness class category ID
 start_time     | string  | must be in `00:00` format
 duration       | integer | time in minutes; defaults to 60
 intensity      | string  | must be either `low`, `medium`, or `high`

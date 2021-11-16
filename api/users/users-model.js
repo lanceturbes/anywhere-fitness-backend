@@ -42,7 +42,8 @@ async function filterBy(filter, withAuth = false) {
         id: usr.user_id,
         name: `${usr.first_name} ${usr.last_name}`,
         username: usr.username,
-        email: usr.email
+        email: usr.email,
+        role_id: usr.role_id
       }
       if (withAuth) {
         userEntry.password = usr.password

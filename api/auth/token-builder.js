@@ -7,7 +7,7 @@ const buildToken = user => {
     subject: user.user_id,
     username: user.username,
     email: user.email,
-    role: user.role
+    role_id: user.role_id
   }
   const options = {
     expiresIn: "5m"

@@ -1,9 +1,9 @@
 const jwt = require("jsonwebtoken")
 
 function decodeToken(token, secret) {
-  jwt.verify(token, secret, (err, decoded) => {
+  return jwt.verify(token, secret, (err, decoded) => {
     if (err) {
-      return null
+      return err
     } else {
       return decoded
     }

@@ -18,12 +18,23 @@ router.post("/register",
   checkUsernameTaken,
   async (req, res, next) => {
     try {
+      // Hash Password
       let regInfo = { ...req.body }
-      delete regInfo.emailConfirm
-
       const hash = bcrypt.hashSync(regInfo.password, BCRYPT_ROUNDS)
       regInfo.password = hash
 
+      // Check/Set Role
+      if (
+        regInfo.instructor_auth &&
+        regInfo.instructor_auth === INSTRUCTOR_CODE
+      ) {
+        delete regInfo.instructor_auth
+        regInfo.role_id = 2
+      } else {
+        regInfo.role_id = 1
+      }
+
+      // Register New User
       const newUser = await User.add(regInfo)
       res.status(201).json({
         message: "New user registered, successfully!",
@@ -40,13 +51,10 @@ router.post("/login",
   checkUserExists,
   async (req, res, next) => {
     try {
-      const { password, instructor_auth } = req.body
+      const { password } = req.body
 
       // Assign Role
-      let user = { ...req.custom_user, role: "client" }
-      if (instructor_auth === INSTRUCTOR_CODE) {
-        user.role = "instructor"
-      }
+      const user = { ...req.custom_user }
 
       // Check Password
       const passwordIsValid = bcrypt.compareSync(password, user.password)

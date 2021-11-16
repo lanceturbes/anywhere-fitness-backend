@@ -310,9 +310,10 @@ describe("[GET] /api/users", () => {
   })
 
   it("returns an array of all currently registered users", async () => {
-    const expected = testUsers.map((user) => {
+    const expected = testUsers.map((user, index) => {
       return {
-        name: user.first_name + " " + user.last_name,
+        id: index + 1,
+        name: `${user.first_name} ${user.last_name}`,
         email: user.email,
         username: user.username
       }
@@ -332,11 +333,12 @@ describe("[GET] /api/users/:id", () => {
     })
 
     it("returns an object with user data", async () => {
+      const usr = testUsers[1]
       const expected = {
-        name: testUsers[1].first_name + " " + testUsers[1].last_name,
-        email: testUsers[1].email,
-        username: testUsers[1].username,
-        user_id: 2
+        id: 2,
+        name: `${usr.first_name} ${usr.last_name}`,
+        username: usr.username,
+        email: usr.email,
       }
       const res = await request(server).get("/api/users/2")
       const actual = res.body
@@ -441,6 +443,65 @@ describe("[GET] /api/classes/:id", () => {
       const res = await request(server).get("/api/classes/300")
       const actual = res.body.message
       expect(actual).toMatch(expected)
+    })
+  })
+})
+
+describe("[POST] /api/classes", () => {
+  describe("success", () => {
+    it.todo("responds with status code 201")
+    it.todo("returns a success message and the new class")
+  })
+
+  describe("failure", () => {
+    it.todo("responds with status code 400")
+
+    describe("instructor id errors", () => {
+      it.todo("responds with status code 400 when ID is missing")
+      it.todo("returns message 'instructor ID is required' when missing")
+      it.todo("responds with status code 404 when ID is invalid")
+      it.todo("returns message 'user does not exist' when invalid")
+    })
+
+    describe("name errors", () => {
+      it.todo("responds with status code 400")
+      it.todo("returns 'class name is required' when missing")
+      it.todo("returns 'invalid class name' when too long/short")
+      it.todo("returns 'class name taken' when reserved")
+    })
+
+    describe("category/type errors", () => {
+      it.todo("responds with status code 400")
+      it.todo("returns 'class type is required' when missing")
+      it.todo("returns 'invalid class type' when not int 1-5")
+    })
+
+    describe("start time errors", () => {
+      it.todo("responds with status code 400")
+      it.todo("returns 'start time is required' when missing")
+      it.todo("returns 'invalid time' when misformatted")
+    })
+
+    describe("duration errors", () => {
+      it.todo("responds with status code 400")
+      it.todo("returns 'invalid duration' when too long/short")
+    })
+
+    describe("intensity errors", () => {
+      it.todo("responds with status code 400")
+      it.todo("returns 'intensity is required' when missing")
+      it.todo("returns 'invalid intensity' when not int 1-3")
+    })
+
+    describe("location errors", () => {
+      it.todo("responds with status code 400")
+      it.todo("returns 'location is required' when missing")
+      it.todo("returns 'invalid location' when too long/short")
+    })
+
+    describe("max class size errors", () => {
+      it.todo("responds with status code 400")
+      it.todo("returns 'invalid class size' when not int or too long/short")
     })
   })
 })

@@ -59,7 +59,17 @@ async function getById(id) {
   }
 }
 
+async function add(newClass) {
+  const newRecords = await db("classes")
+    .insert(newClass)
+    .returning(["class_id"])
+  const id = newRecords[0].class_id
+  const addedClass = getById(id)
+  return addedClass
+}
+
 module.exports = {
+  add,
   getAll,
   getById
 }

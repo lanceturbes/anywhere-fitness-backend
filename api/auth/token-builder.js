@@ -6,7 +6,8 @@ const buildToken = user => {
   const payload = {
     subject: user.user_id,
     username: user.username,
-    email: user.email
+    email: user.email,
+    role: user.role
   }
   const options = {
     expiresIn: "5m"

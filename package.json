@@ -1,6 +1,6 @@
 {
   "name": "anywhere-fitness-backend",
-  "version": "0.4.8",
+  "version": "0.4.9",
   "description": "This is the backend repository for Lambda School's \"Build Week\" Full-Time program, Group #5",
   "main": "index.js",
   "engines": {

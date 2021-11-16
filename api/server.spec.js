@@ -371,28 +371,28 @@ describe("[GET] /api/classes", () => {
   it("returns an array of all current classes", async () => {
     const expected = [
       {
-        class_id: 1,
-        instructor: "John Snow",
-        name: "Castle Black Combat",
-        type: "Strength",
-        start_time: "05:00",
+        attendees: 47,
         duration: 120,
+        id: 1,
+        instructor: "John Snow",
         intensity: "high",
         location: "The Wall",
-        attendees: 47,
-        max_class_size: 64
+        max_class_size: 64,
+        name: "Castle Black Combat",
+        start_time: "05:00:00",
+        type: "strength"
       },
       {
-        class_id: 2,
-        instructor: "Mario",
-        name: "Mario's Run",
-        type: "Endurance",
-        start_time: "07:00",
+        attendees: 14,
         duration: 80,
+        id: 2,
+        instructor: "Mario DaPlumber",
         intensity: "medium",
         location: "Koopa Troopa Beach",
-        attendees: 14,
-        max_class_size: 32
+        max_class_size: 32,
+        name: "Mario's Run",
+        start_time: "07:00:00",
+        type: "endurance"
       }
     ]
     const res = await request(server).get("/api/classes")
@@ -411,16 +411,16 @@ describe("[GET] /api/classes/:id", () => {
     })
     it("returns fitness class object of the given ID", async () => {
       const expected = {
-        class_id: 2,
-        instructor: "Mario",
-        name: "Mario's Run",
-        type: "Endurance",
-        start_time: "07:00",
+        attendees: 14,
         duration: 80,
+        id: 2,
+        instructor: "Mario DaPlumber",
         intensity: "medium",
         location: "Koopa Troopa Beach",
-        attendees: 14,
-        max_class_size: 32
+        max_class_size: 32,
+        name: "Mario's Run",
+        start_time: "07:00:00",
+        type: "endurance"
       }
       const res = await request(server).get("/api/classes/2")
       const actual = res.body

@@ -36,10 +36,21 @@ async function up(knex) {
       // Foreign Keys
       table.integer("instructor_id")
         .notNullable()
+      table.foreign("instructor_id")
+        .references("user_id")
+        .on("users")
+
       table.integer("category_id")
         .notNullable()
+      table.foreign("category_id")
+        .references("category_id")
+        .on("categories")
+
       table.integer("intensity")
         .notNullable()
+      table.foreign("intensity")
+        .references("intensity_id")
+        .on("intensities")
     })
 }
 

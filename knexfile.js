@@ -25,7 +25,6 @@ module.exports = {
   testing: {
     ...sharedConfig,
     connection: DATABASE_URL_TESTING,
-    seeds: { directory: "./data/seeds-testing" }
   },
   production: {
     ...sharedConfig,

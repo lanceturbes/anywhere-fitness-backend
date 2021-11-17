@@ -3,8 +3,7 @@ const request = require("supertest")
 const server = require("./server")
 const db = require("../data/db-config")
 const { testUsers } = require("../data/seeds/005-users")
-const decodeToken = require("./auth/token-decoder")
-const { JWT_SECRET, TEST_PASSWORD } = require("../config")
+const { TEST_PASSWORD } = require("../config")
 
 // Wipe the test database before running any of the tests
 beforeAll(async () => {
@@ -433,7 +432,6 @@ describe("[GET] /api/classes/:id", () => {
 describe("[POST] /api/classes", () => {
   let credentials
   let token
-  let decodedToken
   beforeEach(async () => {
     credentials = {
       username: "johnsnow",
@@ -443,13 +441,12 @@ describe("[POST] /api/classes", () => {
       .post("/api/auth/login")
       .send(credentials)
     token = loginRes.body.token
-    decodedToken = decodeToken(token, JWT_SECRET)
   })
 
   describe("success", () => {
-    let newClassInput
+    let newClass
     beforeEach(() => {
-      newClassInput = {
+      newClass = {
         name: "Wim Hof Method",
         type: 4,
         start_time: "08:00:00",
@@ -463,8 +460,8 @@ describe("[POST] /api/classes", () => {
 
       const res = await request(server)
         .post("/api/classes")
-        .send(newClassInput)
         .set("Authorization", token)
+        .send(newClass)
       const actual = res.status
 
       expect(actual).toBe(expected)
@@ -484,7 +481,7 @@ describe("[POST] /api/classes", () => {
 
       const res = await request(server)
         .post("/api/classes")
-        .send(newClassInput)
+        .send(newClass)
         .set("Authorization", token)
       const actualMessage = res.body.message
       const actualClass = res.body.newClass
@@ -496,12 +493,23 @@ describe("[POST] /api/classes", () => {
 
   describe("failure", () => {
     describe("auth errors", () => {
+      let newClass
+      beforeEach(() => {
+        newClass = {
+          name: "Wim Hof Method",
+          type: 4,
+          start_time: "08:00:00",
+          intensity: 1,
+          location: "Wim's Icebath Studio"
+        }
+      })
+
       it("responds with status code 401 when not instructor", async () => {
         const expected = 401
 
         const res = await request(server)
           .post("/api/classes")
-          .send({})
+          .send(newClass)
         const actual = res.status
 
         expect(actual).toBe(expected)
@@ -511,7 +519,7 @@ describe("[POST] /api/classes", () => {
 
         const res = await request(server)
           .post("/api/classes")
-          .send({})
+          .send(newClass)
         const actual = res.body.message
 
         expect(actual).toMatch(expected)
@@ -537,7 +545,7 @@ describe("[POST] /api/classes", () => {
           .post("/api/classes")
           .send(newClass)
           .set("Authorization", token)
-        const actual = res.body.message
+        const actual = res.status
 
         expect(actual).toBe(expected)
       })
@@ -577,7 +585,7 @@ describe("[POST] /api/classes", () => {
 
       it("returns 'class name taken' when reserved", async () => {
         const expected = /class name taken/i
-        newClass.name = "a"
+        newClass.name = "Castle Black Combat"
 
         const res = await request(server)
           .post("/api/classes")

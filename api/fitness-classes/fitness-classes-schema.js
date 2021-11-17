@@ -18,6 +18,7 @@ const fitnessClassSchema = yup.object().shape({
     .max(64, "invalid class name"),
   intensity: yup
     .number()
+    .typeError("invalid intensity")
     .required("intensity is required")
     .min(1, "invalid intensity")
     .max(3, "invalid intensity"),
@@ -29,14 +30,17 @@ const fitnessClassSchema = yup.object().shape({
     .max(128, "invalid location"),
   max_class_size: yup
     .number()
+    .typeError("invalid class size")
     .min(5, "invalid class size")
     .max(200, "invalid class size"),
   duration: yup
     .number()
+    .typeError("invalid duration")
     .min(15, "invalid duration")
     .max(1440, "invalid duration"),
   type: yup
     .number()
+    .typeError("invalid class type")
     .required("class type is required")
     .min(1, "invalid class type")
     .max(5, "invalid class type"),

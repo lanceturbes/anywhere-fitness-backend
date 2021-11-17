@@ -1,27 +1,27 @@
 const testClasses = [
   {
     attendees: 47,
-    duration: 120,
+    category_id: 5,
     class_id: 1,
+    class_name: "Castle Black Combat",
+    duration: 120,
     instructor_id: 2,
     intensity: 3,
     location: "The Wall",
     max_class_size: 64,
-    class_name: "Castle Black Combat",
-    start_time: "06:00:00",
-    category_id: 5
+    start_time: "06:00:00"
   },
   {
     attendees: 16,
-    duration: 40,
+    category_id: 2,
     class_id: 2,
+    class_name: "Pooch's Run",
+    duration: 40,
     instructor_id: 1,
     intensity: 2,
     location: "Koopa Troopa Beach",
     max_class_size: 32,
-    class_name: "Pooch's Run",
-    start_time: "10:00:00",
-    category_id: 2
+    start_time: "10:00:00"
   }
 ]
 

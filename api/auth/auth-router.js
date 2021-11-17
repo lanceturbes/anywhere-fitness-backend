@@ -52,8 +52,6 @@ router.post("/login",
   async (req, res, next) => {
     try {
       const { password } = req.body
-
-      // Assign Role
       const user = { ...req.custom_user }
 
       // Check Password

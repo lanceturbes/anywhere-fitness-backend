@@ -132,15 +132,14 @@ Endpoints starting with `/api/classes` are related to fitness class information.
 **Input**: pass in an object with the following properties...
 
 Key            | Type    | Required | Notes
--------------- | ------- | -------- | -----------------------------------------------
-instructor_id  | integer | yes      | ID of the instructor to assign the class to
+-------------- | ------- | -------- | --------------------------------------------------------
 name           | string  | yes      | must be between 5-64 characters long
 type           | integer | yes      | represents the fitness class category ID
-start_time     | string  | yes      | must be in `00:00` format
-duration       | integer | no       | time in minutes; defaults to 60
+start_time     | string  | yes      | must be in `00:00:00` format
+duration       | integer | no       | time in minutes; defaults to 60; must be between 15-1440
 intensity      | integer | yes      | must be either 1 (low), 2 (medium), or 3 (high)
 location       | string  | yes      | must be between 6-128 characters long
-max_class_size | integer | no       | defaults to 30
+max_class_size | integer | no       | defaults to 30; must be between 5-200
 
 **Output**: returns a success message and the newly created class
 

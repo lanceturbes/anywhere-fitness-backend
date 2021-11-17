@@ -229,3 +229,26 @@ Endpoints starting with `/api/users` are for fetching user information.
   "username": "ulfric-stormcloak"
 }
 ```
+
+### Get Classes a User is Attending
+
+**Endpoint**: `[GET] /api/users/:id/classes`
+
+**Parameters**: `:id` must be an integer representing user ID
+
+**Output**: returns an array of classes a user is attending
+
+```
+[
+  {
+    "id": 3,
+    "duration": 60,
+    "instructor": "Super Mario",
+    "intensity": "low",
+    "location": "Your Happy Place",
+    "name": "Best Class Ever",
+    "start_time": "17:00:00",
+    "type": "meditation"
+  }
+]
+```

@@ -72,7 +72,30 @@ async function add(usr) {
   }
 }
 
+async function getClassesByUserId(id) {
+  const classRecords = await db("classes as cl")
+    .leftJoin("classes_clients as c_c",
+      "cl.class_id", "c_c.class_id")
+    .leftJoin("users as u",
+      "c_c.user_id", "u.user_id")
+    .leftJoin("intensities as i",
+      "i.intensity_id", "cl.intensity")
+    .leftJoin("categories as ca",
+      "ca.category_id", "cl.category_id")
+    .select("cl.class_id as id",
+      "u.user_id as user_id",
+      "cl.duration as duration",
+      "cl.location as location",
+      "cl.class_name as name",
+      "cl.start_time as start_time",
+      "i.intensity_level as intensity")
+    .where({ "u.user_id": id })
+    .orderBy("id")
+  return classRecords
+}
+
 module.exports = {
+  getClassesByUserId,
   getAll,
   getById,
   filterBy,

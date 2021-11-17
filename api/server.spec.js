@@ -921,3 +921,55 @@ describe("[POST] /api/classes", () => {
     })
   })
 })
+
+describe("[GET] /api/users/:id/classes", () => {
+  describe("success", () => {
+    it("responds with status code 200", async () => {
+      const expected = 200
+
+      const res = await request(server)
+        .get("/api/users/1/classes")
+      const actual = res.status
+
+      expect(actual).toBe(expected)
+    })
+
+    it("returns an array of classes", async () => {
+      const expected = [
+        {
+          duration: 120,
+          id: 1,
+          intensity: "high",
+          location: "The Wall",
+          name: "Castle Black Combat",
+          start_time: "06:00:00",
+          user_id: 2
+        }
+      ]
+
+      const res = await request(server)
+        .get("/api/users/2/classes")
+      const actual = res.body
+
+      expect(actual).toEqual(expected)
+    })
+  })
+
+  describe("failure", () => {
+    it("responds with status code 404", async () => {
+      const expected = 404
+      const res = await request(server)
+        .get("/api/users/100/classes")
+      const actual = res.status
+      expect(actual).toBe(expected)
+    })
+
+    it("returns messaage 'user not found'", async () => {
+      const expected = /user does not exist/i
+      const res = await request(server)
+        .get("/api/users/100/classes")
+      const actual = res.body.message
+      expect(actual).toMatch(expected)
+    })
+  })
+})

@@ -16,14 +16,14 @@ Endpoints starting with `/api/auth` are related to the login/sign-up process.
 
 **Input**: pass in an object containing the following registration information...
 
-Key          | Type   | Required | Notes
------------- | ------ | -------- | -----------------------------------------------------------
-first_name   | string | yes      | must be between 3-64 characters long
-last_name    | string | yes      | must be between 3-64 characters long
-username     | string | yes      | must be unqiue, and between 6-32 characters long
-password     | string | yes      | must be between 8-64 characters long
-email        | string | yes      | must be formatted as a real email (i.e. address@email.com)
-emailConfirm | string | yes      | must match the email provided in the `email` field, exactly
+Key             | Type   | Required | Notes
+--------------- | ------ | -------- | -------------------------------------------------------------
+first_name      | string | yes      | must be between 3-64 characters long
+last_name       | string | yes      | must be between 3-64 characters long
+username        | string | yes      | must be unqiue, and between 6-32 characters long
+password        | string | yes      | must be between 8-64 characters long
+email           | string | yes      | must be formatted as a real email (i.e. address@email.com)
+instructor_auth | string | no       | if correct, will register the user with an instructor account
 
 **Output**: on success, returns an object in the following format...
 
@@ -31,10 +31,10 @@ emailConfirm | string | yes      | must match the email provided in the `email` 
 {
   "message": "New user registered, successfully!",
   "user": {
-    "email": "highking@windhelm.net",
-    "name": "Ulfric Stormcloak",
-    "user_id": 3,
-    "username": "ulfric-stormcloak"
+    "id": 4,
+    "name": "Super Mario",
+    "username": "supermario",
+    "email": "supermario@gmail64.net"
   }
 }
 ```
@@ -54,8 +54,15 @@ password | string | yes      | password must be valid for the target user
 
 ```
 {
-  "message": "Welcome, ulfric-stormcloak!",
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0IjozLCJ1c2VybmFtZSI6InVsZnJpYy1zdG9ybWNsb2FrIiwiZW1haWwiOiJoaWdoa2luZ0B3aW5kaGVsbS5uZXQiLCJpYXQiOjE2MzY4NTYwNDUsImV4cCI6MTYzNjg1NjM0NX0.FjboXxx-9hZFrogTM2Q3McWPqc8u7F0odJehfIQYQ-4"
+  "message": "Welcome, supermario!",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWJqZWN0Ijo0LCJ1c2VyX2lkIjo0LCJ1c2VybmFtZSI6InN1cGVybWFyaW8iLCJlbWFpbCI6InN1cGVybWFyaW9AZ21haWw2NC5uZXQiLCJyb2xlX2lkIjoyLCJpYXQiOjE2MzcxMTc3NDIsImV4cCI6MTYzNzExODA0Mn0.cyytmVUTViGJ5cQhFozDlHIL-fuZ75ZBrijc-uu0RWI",
+  "user": {
+    "id": 4,
+    "name": "Super Mario",
+    "username": "supermario",
+    "email": "supermario@gmail64.net",
+    "role_id": 2
+  }
 }
 ```
 
@@ -73,32 +80,30 @@ Endpoints starting with `/api/classes` are related to fitness class information.
 
 ```
 [
-  ...
   {
-    "attendees": 11,
-    "class_id": 9,
-    "duration": 30,
-    "instructor": "Mr. Miyagi",
-    "intensity": "low",
-    "location": "Fancy Gardens",
-    "max_class_size": 20,
-    "name": "Zen Fitness",
-    "start_time": "08:00",
-    "type": "Yoga"
+    "attendees": 47,
+    "id": 1,
+    "duration": 120,
+    "instructor": "John Snow",
+    "intensity": "high",
+    "location": "The Wall",
+    "max_class_size": 64,
+    "name": "Castle Black Combat",
+    "start_time": "06:00:00",
+    "type": "strength"
   },
   {
-    "attendees": 18,
-    "class_id": 10,
-    "duration": 60,
-    "instructor": "Intensity Man",
-    "intensity": "high",
-    "location": "Muscle Gym",
-    "max_class_size": 35,
-    "name": "Shredders",
-    "start_time": "13:00",
-    "type": "Strength Training"
+    "attendees": 16,
+    "id": 2,
+    "duration": 40,
+    "instructor": "Wayward Pooch",
+    "intensity": "medium",
+    "location": "Koopa Troopa Beach",
+    "max_class_size": 32,
+    "name": "Pooch's Run",
+    "start_time": "10:00:00",
+    "type": "endurance"
   }
-  ...
 ]
 ```
 
@@ -112,103 +117,63 @@ Endpoints starting with `/api/classes` are related to fitness class information.
 
 ```
 {
-  "attendees": 18,
-  "class_id": 10,
-  "duration": 60,
-  "instructor": "Intensity Man",
+  "attendees": 47,
+  "id": 1,
+  "duration": 120,
+  "instructor": "John Snow",
   "intensity": "high",
-  "location": "Muscle Gym",
-  "max_class_size": 35,
-  "name": "Shredders",
-  "start_time": "13:00",
-  "type": "Strength Training"
+  "location": "The Wall",
+  "max_class_size": 64,
+  "name": "Castle Black Combat",
+  "start_time": "06:00:00",
+  "type": "strength"
 }
 ```
 
 ### Create New Class
 
+This endpoint is protected; you must send your requests with a login token in the request header, and that token must be valid (not expired, correctly formatted) and for a user account registered as an instructor. If you are not an instructor, you will receive an `access denied` message.
+
 **Endpoint**: `[POST] /api/classes`
 
-**Input**: pass in an object with the following properties...
+**Input**: pass in an object with the following properties; optional arguments will be automatically filled in with the default values specified if left empty...
 
-Key            | Type    | Required | Notes
--------------- | ------- | -------- | --------------------------------------------------------
-name           | string  | yes      | must be between 5-64 characters long
-type           | integer | yes      | represents the fitness class category ID
-start_time     | string  | yes      | must be in `00:00:00` format
-duration       | integer | no       | time in minutes; defaults to 60; must be between 15-1440
-intensity      | integer | yes      | must be either 1 (low), 2 (medium), or 3 (high)
-location       | string  | yes      | must be between 6-128 characters long
-max_class_size | integer | no       | defaults to 30; must be between 5-200
+Key            | Type    | Required | Default | Notes
+-------------- | ------- | -------- | ------- | ------------------------------------------------
+name           | string  | yes      |         | must be between 5-64 characters long
+type           | integer | yes      |         | represents a fitness class category ID (INT 1-5)
+start_time     | string  | yes      |         | must be in `00:00:00` format
+duration       | integer | no       | 60      | time in minutes; must be between 15-1440
+intensity      | integer | yes      |         | must be either 1 (low), 2 (medium), or 3 (high)
+location       | string  | yes      |         | must be between 6-128 characters long
+max_class_size | integer | no       | 30      | must be between 5-200 characters long
+
+**Notes**: The fitness class categories/types are as follows...
+
+ID | Category Name
+-- | -------------
+1  | Balance
+2  | Endurance
+3  | Flexibility
+4  | Meditation
+5  | Strength
 
 **Output**: returns a success message and the newly created class
 
 ```
 {
-  message: "Class created successfully!",
-  class: {
-    "class_id": 12,
-    "duration": 100,
-    "instructor_id": 1,
-    "intensity": "high",
-    "location": "Koopa Troopa Beach",
-    "max_class_size": 50,
-    "name": "Koopa's Circuit",
-    "start_time": "05:00",
-    "type": "Cardio"
-  }
-}
-```
-
-### Edit Class Details
-
-**Endpoint**: `[PUT] /api/classes/:id`
-
-**Parameters**: `:id` must be an integer representing a class_id
-
-**Input**: pass in an object containing **ALL** of the following...
-
-Key            | Type    | Notes
--------------- | ------- | -----------------------------------------
-name           | string  | must be between 5-64 characters long
-type           | integer | represents the fitness class category ID
-start_time     | string  | must be in `00:00` format
-duration       | integer | time in minutes; defaults to 60
-intensity      | string  | must be either `low`, `medium`, or `high`
-location       | string  | must be between 6-128 characters long
-max_class_size | integer | defaults to 30
-
-**Output**: returns a success message and the updated records
-
-```
-{
-  message: "Class edited successfully!",
-  class: {
+  "message": "Class created successfully!",
+  "newClass": {
+    "attendees": 0,
+    "id": 3,
     "duration": 60,
-    "intensity": "medium",
-    "location": "Koopa Troopa Beach",
+    "instructor": "Super Mario",
+    "intensity": "low",
+    "location": "Your Happy Place",
     "max_class_size": 30,
-    "name": "Troopa's Circuit",
-    "start_time": "08:00",
-    "type": "Cardio"
-  }
-}
-```
-
-### Delete Class
-
-**Endpoint**: `[DELETE] /api/classes/:id`
-
-**Parameters**: `:id` must be an integer; represents `class_id`
-
-**Output**: returns a success message and the name/id of the deleted class
-
-```
-{
-  message: "Class deleted successfully!",
-  class: {
-    "class_id": 12,
-    "name": "Koopa's Circuit"
+    "name": "Best Class Ever",
+    "start_time": "17:00:00",
+    "type": "meditation"
   }
 }
 ```

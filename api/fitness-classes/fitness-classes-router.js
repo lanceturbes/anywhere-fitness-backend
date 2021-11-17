@@ -13,7 +13,7 @@ router.get("/",
       const fitnessClasses = await FitnessClass.getAll()
       res.status(200).json(fitnessClasses)
     } catch (err) {
-      next()
+      next(err)
     }
   }
 )
@@ -25,7 +25,7 @@ router.get("/:id",
       const fitnessClass = req.custom_class
       res.status(200).json(fitnessClass)
     } catch (err) {
-      next()
+      next(err)
     }
   }
 )
@@ -61,7 +61,7 @@ router.post("/",
         newClass: fitnessClass
       })
     } catch (err) {
-      next()
+      next(err)
     }
   }
 )

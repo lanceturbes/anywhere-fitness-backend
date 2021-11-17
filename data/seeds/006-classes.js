@@ -2,7 +2,6 @@ const testClasses = [
   {
     attendees: 47,
     category_id: 5,
-    class_id: 1,
     class_name: "Castle Black Combat",
     duration: 120,
     instructor_id: 2,
@@ -14,7 +13,6 @@ const testClasses = [
   {
     attendees: 16,
     category_id: 2,
-    class_id: 2,
     class_name: "Pooch's Run",
     duration: 40,
     instructor_id: 1,

@@ -89,12 +89,10 @@ async function filterBy(filter) {
 }
 
 async function add(newClass) {
-  const newRecords = await db("classes")
+  const [newRecord] = await db("classes")
     .insert(newClass)
     .returning(["class_id"])
-  const id = newRecords[0].class_id
-  const addedClass = getById(id)
-  return addedClass
+  return await getById(newRecord.class_id)
 }
 
 module.exports = {

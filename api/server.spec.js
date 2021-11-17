@@ -457,11 +457,18 @@ describe("[POST] /api/classes", () => {
 
     it("responds with status code 201", async () => {
       const expected = 201
+      const newClass = {
+        name: "Wim Hof Method",
+        type: 4,
+        start_time: "08:00:00",
+        intensity: 1,
+        location: "Wim's Icebath Studio"
+      }
 
       const res = await request(server)
         .post("/api/classes")
-        .set("Authorization", token)
         .send(newClass)
+        .set('Authorization', token)
       const actual = res.status
 
       expect(actual).toBe(expected)
@@ -476,7 +483,10 @@ describe("[POST] /api/classes", () => {
         type: "meditation",
         start_time: "08:00:00",
         intensity: "low",
-        location: "Wim's Icebath Studio"
+        location: "Wim's Icebath Studio",
+        max_class_size: 30,
+        attendees: 0,
+        duration: 60
       }
 
       const res = await request(server)

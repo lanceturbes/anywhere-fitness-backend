@@ -4,6 +4,7 @@ const { checkFitnessClassId } = require("../middleware/check-fitness-class-id")
 const { validateNewFitnessClass } = require("../middleware/validate-class")
 const decodeToken = require("../auth/token-decoder")
 const { JWT_SECRET } = require("../../config")
+const checkIfInstructor = require("../middleware/check-instructor")
 
 router.get("/",
   async (req, res, next) => {
@@ -29,6 +30,7 @@ router.get("/:id",
 )
 
 router.post("/",
+  checkIfInstructor,
   validateNewFitnessClass,
   async (req, res, next) => {
     try {

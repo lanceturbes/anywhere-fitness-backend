@@ -32,11 +32,7 @@ const registerSchema = yup.object().shape({
     .string()
     .trim()
     .required("email is required")
-    .email("email is invalid"),
-  emailConfirm: yup
-    .string()
-    .trim()
-    .oneOf([yup.ref("email")], "emails must match")
+    .email("email is invalid")
 })
 
 const loginSchema = yup.object().shape({

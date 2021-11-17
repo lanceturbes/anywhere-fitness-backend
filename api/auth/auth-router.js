@@ -2,7 +2,7 @@ const router = require("express").Router()
 const bcrypt = require("bcryptjs")
 
 const User = require("../users/users-model")
-const { BCRYPT_ROUNDS } = require("../../config")
+const { BCRYPT_ROUNDS, INSTRUCTOR_CODE } = require("../../config")
 const buildToken = require("./token-builder")
 const {
   validateLogin,
@@ -18,20 +18,27 @@ router.post("/register",
   checkUsernameTaken,
   async (req, res, next) => {
     try {
-      const { first_name, last_name, username, password, email } = req.body
-      let registrationInfo = { first_name, last_name, username, password, email }
-      const hash = bcrypt.hashSync(registrationInfo.password, BCRYPT_ROUNDS)
-      registrationInfo.password = hash
+      // Hash Password
+      let regInfo = { ...req.body }
+      const hash = bcrypt.hashSync(regInfo.password, BCRYPT_ROUNDS)
+      regInfo.password = hash
 
-      const newUser = await User.add(registrationInfo)
+      // Check/Set Role
+      if (
+        regInfo.instructor_auth &&
+        regInfo.instructor_auth === INSTRUCTOR_CODE
+      ) {
+        delete regInfo.instructor_auth
+        regInfo.role_id = 2
+      } else {
+        regInfo.role_id = 1
+      }
+
+      // Register New User
+      const newUser = await User.add(regInfo)
       res.status(201).json({
         message: "New user registered, successfully!",
-        user: {
-          user_id: newUser.user_id,
-          name: first_name + " " + last_name,
-          username,
-          email
-        }
+        user: newUser
       })
     } catch (err) {
       next(err)
@@ -45,13 +52,16 @@ router.post("/login",
   async (req, res, next) => {
     try {
       const { password } = req.body
-      const user = req.custom_existingUser
-      const passwordIsValid = bcrypt.compareSync(password, user.password)
+      const user = { ...req.custom_user }
 
+      // Check Password
+      const passwordIsValid = bcrypt.compareSync(password, user.password)
       if (passwordIsValid) {
+        delete user.password
         res.status(200).json({
           message: `Welcome, ${user.username}!`,
-          token: buildToken(user)
+          token: buildToken(user),
+          user
         })
       } else {
         next({

@@ -4,9 +4,11 @@ const { JWT_SECRET } = require("../../config")
 
 const buildToken = user => {
   const payload = {
-    subject: user.user_id,
+    subject: user.id,
+    user_id: user.id,
     username: user.username,
-    email: user.email
+    email: user.email,
+    role_id: user.role_id
   }
   const options = {
     expiresIn: "5m"

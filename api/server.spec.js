@@ -2,7 +2,8 @@ const request = require("supertest")
 
 const server = require("./server")
 const db = require("../data/db-config")
-const { testUsers } = require("../data/seeds-testing/002-users")
+const { testUsers } = require("../data/seeds/005-users")
+const { TEST_PASSWORD } = require("../config")
 
 // Wipe the test database before running any of the tests
 beforeAll(async () => {
@@ -25,11 +26,15 @@ it("is using the testing environment", async () => {
   expect(process.env.NODE_ENV).toBe("testing")
 })
 
-describe("[POST] /api/auth/register", () => {
-  function register(registration) {
-    return request(server).post("/api/auth/register").send(registration)
-  }
+function login(user) {
+  return request(server).post("/api/auth/login").send(user)
+}
 
+function register(registration) {
+  return request(server).post("/api/auth/register").send(registration)
+}
+
+describe("[POST] /api/auth/register", () => {
   async function registerAndCheck(responseProp, expectedVal, regInfo) {
     const res = await register(regInfo)
     if (responseProp === "status") {
@@ -49,8 +54,7 @@ describe("[POST] /api/auth/register", () => {
         last_name: "Stormcloak",
         username: "stormcloak",
         password: "jarl-of-windhelm",
-        email: "highking@windhelm.net",
-        emailConfirm: "highking@windhelm.net"
+        email: "highking@windhelm.net"
       }
     })
 
@@ -90,7 +94,6 @@ describe("[POST] /api/auth/register", () => {
           username: "stormcloak",
           password: "jarl-of-windhelm",
           email: "highking@windhelm.net",
-          emailConfirm: "highking@windhelm.net"
         }
       })
 
@@ -138,7 +141,6 @@ describe("[POST] /api/auth/register", () => {
           username: "",
           password: "jarl-of-windhelm",
           email: "highking@windhelm.net",
-          emailConfirm: "highking@windhelm.net"
         }
       })
 
@@ -161,7 +163,7 @@ describe("[POST] /api/auth/register", () => {
 
       it("returns 'username taken' when username already in use", async () => {
         const expectedMessage = /username taken/i
-        registration.username = "secretivechinchilla94"
+        registration.username = "johnsnow"
         await registerAndCheck("message", expectedMessage, registration)
       })
     })
@@ -173,7 +175,6 @@ describe("[POST] /api/auth/register", () => {
           username: "sheogorath",
           password: "",
           email: "sheogorath@shiveringisles.net",
-          emailConfirm: "sheogorath@shiveringisles.net"
         }
       })
 
@@ -202,7 +203,6 @@ describe("[POST] /api/auth/register", () => {
           username: "sheogorath",
           password: "TH3_M4D_PR1NC3",
           email: "",
-          emailConfirm: ""
         }
       })
 
@@ -214,20 +214,6 @@ describe("[POST] /api/auth/register", () => {
       it("returns 'email is invalid' when email is in invalid format", async () => {
         const expectedMessage = /email is invalid/i
         registration.email = "sheogorath"
-        registration.emailConfirm = "sheogorath"
-        await registerAndCheck("message", expectedMessage, registration)
-      })
-    })
-
-    describe("email confirmation error messages", () => {
-      it("returns 'emails must match' when email/emailConfirm don't match", async () => {
-        const expectedMessage = /emails must match/i
-        const registration = {
-          username: "sheogorath",
-          password: "TH3_M4D_PR1NC3",
-          email: "sheogorath@shiveringisles.net",
-          emailConfirm: "notmatching"
-        }
         await registerAndCheck("message", expectedMessage, registration)
       })
     })
@@ -235,10 +221,6 @@ describe("[POST] /api/auth/register", () => {
 })
 
 describe("[POST] /api/auth/login", () => {
-  function login(user) {
-    return request(server).post("/api/auth/login").send(user)
-  }
-
   async function loginAndCheck(responseProp, expectedVal, loginInfo) {
     const res = await login(loginInfo)
     if (responseProp === "status") {
@@ -254,8 +236,8 @@ describe("[POST] /api/auth/login", () => {
     let loginInfo
     beforeEach(() => {
       loginInfo = {
-        username: "secretivechinchilla94",
-        password: "secretivechinchilla94"
+        username: "johnsnow",
+        password: TEST_PASSWORD
       }
     })
 
@@ -264,7 +246,7 @@ describe("[POST] /api/auth/login", () => {
     })
 
     it("returns a welcome message and a login token", async () => {
-      const expectedMessage = /welcome, secretivechinchilla94/i
+      const expectedMessage = /welcome, johnsnow/i
       const res = await login(loginInfo)
       expect(res.body.message).toMatch(expectedMessage)
       expect(res.body).toHaveProperty("token")
@@ -310,9 +292,10 @@ describe("[GET] /api/users", () => {
   })
 
   it("returns an array of all currently registered users", async () => {
-    const expected = testUsers.map((user) => {
+    const expected = testUsers.map((user, index) => {
       return {
-        name: user.first_name + " " + user.last_name,
+        id: index + 1,
+        name: `${user.first_name} ${user.last_name}`,
         email: user.email,
         username: user.username
       }
@@ -332,11 +315,12 @@ describe("[GET] /api/users/:id", () => {
     })
 
     it("returns an object with user data", async () => {
+      const usr = testUsers[1]
       const expected = {
-        name: testUsers[1].first_name + " " + testUsers[1].last_name,
-        email: testUsers[1].email,
-        username: testUsers[1].username,
-        user_id: 2
+        id: 2,
+        name: `${usr.first_name} ${usr.last_name}`,
+        username: usr.username,
+        email: usr.email,
       }
       const res = await request(server).get("/api/users/2")
       const actual = res.body
@@ -357,6 +341,583 @@ describe("[GET] /api/users/:id", () => {
       const res = await request(server).get("/api/users/100")
       const actual = res.body.message
       expect(actual).toMatch(expected)
+    })
+  })
+})
+
+describe("[GET] /api/classes", () => {
+  it("responds with status code 200", async () => {
+    const expected = 200
+    const res = await request(server).get("/api/classes")
+    const actual = res.status
+    expect(actual).toBe(expected)
+  })
+  it("returns an array of all current classes", async () => {
+    const expected = [
+      {
+        attendees: 47,
+        duration: 120,
+        id: 1,
+        instructor: "John Snow",
+        intensity: "high",
+        location: "The Wall",
+        max_class_size: 64,
+        name: "Castle Black Combat",
+        start_time: "06:00:00",
+        type: "strength"
+      },
+      {
+        attendees: 16,
+        duration: 40,
+        id: 2,
+        instructor: "Wayward Pooch",
+        intensity: "medium",
+        location: "Koopa Troopa Beach",
+        max_class_size: 32,
+        name: "Pooch's Run",
+        start_time: "10:00:00",
+        type: "endurance"
+      }
+    ]
+    const res = await request(server).get("/api/classes")
+    const actual = res.body
+    expect(actual).toEqual(expected)
+  })
+})
+
+describe("[GET] /api/classes/:id", () => {
+  describe("success", () => {
+    it("responds with status code 200", async () => {
+      const expected = 200
+      const res = await request(server).get("/api/classes/2")
+      const actual = res.status
+      expect(actual).toBe(expected)
+    })
+    it("returns fitness class object of the given ID", async () => {
+      const expected = {
+        attendees: 16,
+        duration: 40,
+        id: 2,
+        instructor: "Wayward Pooch",
+        intensity: "medium",
+        location: "Koopa Troopa Beach",
+        max_class_size: 32,
+        name: "Pooch's Run",
+        start_time: "10:00:00",
+        type: "endurance"
+      }
+      const res = await request(server).get("/api/classes/2")
+      const actual = res.body
+      expect(actual).toEqual(expected)
+    })
+  })
+
+  describe("failure", () => {
+    it("responds with status code 404", async () => {
+      const expected = 404
+      const res = await request(server).get("/api/classes/300")
+      const actual = res.status
+      expect(actual).toBe(expected)
+    })
+
+    it("returns message 'class not found'", async () => {
+      const expected = /class not found/i
+      const res = await request(server).get("/api/classes/300")
+      const actual = res.body.message
+      expect(actual).toMatch(expected)
+    })
+  })
+})
+
+describe("[POST] /api/classes", () => {
+  let credentials
+  let token
+  beforeEach(async () => {
+    credentials = {
+      username: "johnsnow",
+      password: TEST_PASSWORD
+    }
+    const loginRes = await request(server)
+      .post("/api/auth/login")
+      .send(credentials)
+    token = loginRes.body.token
+  })
+
+  describe("success", () => {
+    let newClass
+    beforeEach(() => {
+      newClass = {
+        name: "Wim Hof Method",
+        type: 4,
+        start_time: "08:00:00",
+        intensity: 1,
+        location: "Wim's Icebath Studio"
+      }
+    })
+
+    it("responds with status code 201", async () => {
+      const expected = 201
+      const newClass = {
+        name: "Wim Hof Method",
+        type: 4,
+        start_time: "08:00:00",
+        intensity: 1,
+        location: "Wim's Icebath Studio"
+      }
+
+      const res = await request(server)
+        .post("/api/classes")
+        .send(newClass)
+        .set('Authorization', token)
+      const actual = res.status
+
+      expect(actual).toBe(expected)
+    })
+
+    it("returns a success message and the new class", async () => {
+      const expectedMessage = /class created successfully/i
+      const expectedClass = {
+        id: 3,
+        name: "Wim Hof Method",
+        instructor: "John Snow",
+        type: "meditation",
+        start_time: "08:00:00",
+        intensity: "low",
+        location: "Wim's Icebath Studio",
+        max_class_size: 30,
+        attendees: 0,
+        duration: 60
+      }
+
+      const res = await request(server)
+        .post("/api/classes")
+        .send(newClass)
+        .set("Authorization", token)
+      const actualMessage = res.body.message
+      const actualClass = res.body.newClass
+
+      expect(actualMessage).toMatch(expectedMessage)
+      expect(actualClass).toEqual(expectedClass)
+    })
+  })
+
+  describe("failure", () => {
+    describe("auth errors", () => {
+      let newClass
+      beforeEach(() => {
+        newClass = {
+          name: "Wim Hof Method",
+          type: 4,
+          start_time: "08:00:00",
+          intensity: 1,
+          location: "Wim's Icebath Studio"
+        }
+      })
+
+      it("responds with status code 401 when not instructor", async () => {
+        const expected = 401
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+        const actual = res.status
+
+        expect(actual).toBe(expected)
+      })
+      it("returns 'access denied' when not authed", async () => {
+        const expected = /access denied/i
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
+    })
+
+    describe("name errors", () => {
+      let newClass
+      beforeEach(() => {
+        newClass = {
+          name: "",
+          type: 4,
+          start_time: "08:00:00",
+          intensity: 1,
+          location: "Wim's Icebath Studio"
+        }
+      })
+
+      it("responds with status code 400", async () => {
+        const expected = 400
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actual = res.status
+
+        expect(actual).toBe(expected)
+      })
+
+      it("returns 'class name is required' when missing", async () => {
+        const expected = /class name is required/i
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
+
+      it("returns 'invalid class name' when too long/short", async () => {
+        const expected = /invalid class name/i
+        newClass.name = "a"
+
+        const shortRes = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actualShortRes = shortRes.body.message
+
+        expect(actualShortRes).toMatch(expected)
+
+        const longRes = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actualLongRes = longRes.body.message
+
+        expect(actualLongRes).toMatch(expected)
+      })
+
+      it("returns 'class name taken' when reserved", async () => {
+        const expected = /class name taken/i
+        newClass.name = "Castle Black Combat"
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
+    })
+
+    describe("category/type errors", () => {
+      let newClass
+      beforeEach(() => {
+        newClass = {
+          name: "Wim Hof Method",
+          start_time: "08:00:00",
+          intensity: 1,
+          location: "Wim's Icebath Studio"
+        }
+      })
+
+      it("responds with status code 400", async () => {
+        const expected = 400
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actual = res.status
+
+        expect(actual).toBe(expected)
+      })
+
+      it("returns 'class type is required' when missing", async () => {
+        const expected = /class type is required/i
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
+
+      it("returns 'invalid class type' when not int 1-5", async () => {
+        const expected = /invalid class type/i
+        newClass.type = "badwrong"
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
+    })
+
+    describe("start time errors", () => {
+      let newClass
+      beforeEach(() => {
+        newClass = {
+          name: "Wim Hof Method",
+          type: 4,
+          intensity: 1,
+          location: "Wim's Icebath Studio"
+        }
+      })
+
+      it("responds with status code 400", async () => {
+        const expected = 400
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actual = res.status
+
+        expect(actual).toBe(expected)
+      })
+
+      it("returns 'start time is required' when missing", async () => {
+        const expected = /start time is required/i
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
+
+      it("returns 'invalid time' when misformatted", async () => {
+        const expected = /invalid time/i
+        newClass.start_time = "badwrong"
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
+    })
+
+    describe("duration errors", () => {
+      let newClass
+      beforeEach(() => {
+        newClass = {
+          name: "Wim Hof Method",
+          type: 4,
+          start_time: "08:00:00",
+          intensity: 1,
+          location: "Wim's Icebath Studio"
+        }
+      })
+
+      it("responds with status code 400", async () => {
+        const expected = 400
+        newClass.duration = 9000000000
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actual = res.status
+
+        expect(actual).toBe(expected)
+      })
+
+      it("returns 'invalid duration' when too long/short/non-INT", async () => {
+        const expected = /invalid duration/i
+
+        newClass.duration = 9000000000
+        const res1 = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actualLong = res1.body.message
+        expect(actualLong).toMatch(expected)
+
+        newClass.duration = 1
+        const res2 = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actualShort = res2.body.message
+        expect(actualShort).toMatch(expected)
+
+        newClass.duration = "not a number"
+        const res3 = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actualBad = res3.body.message
+        expect(actualBad).toMatch(expected)
+      })
+    })
+
+    describe("intensity errors", () => {
+      let newClass
+      beforeEach(() => {
+        newClass = {
+          name: "Wim Hof Method",
+          type: 4,
+          start_time: "08:00:00",
+          location: "Wim's Icebath Studio"
+        }
+      })
+
+      it("responds with status code 400", async () => {
+        const expected = 400
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actual = res.status
+
+        expect(actual).toBe(expected)
+      })
+
+      it("returns 'intensity is required' when missing", async () => {
+        const expected = /intensity is required/i
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
+
+      it("returns 'invalid intensity' when not int 1-3", async () => {
+        const expected = /invalid intensity/i
+
+        newClass.intensity = "badwrong"
+        const res1 = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actualRes1 = res1.body.message
+        expect(actualRes1).toMatch(expected)
+
+        newClass.intensity = -500
+        const res2 = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actualRes2 = res2.body.message
+        expect(actualRes2).toMatch(expected)
+      })
+    })
+
+    describe("location errors", () => {
+      let newClass
+      beforeEach(() => {
+        newClass = {
+          name: "Wim Hof Method",
+          type: 4,
+          start_time: "08:00:00",
+          intensity: 1,
+        }
+      })
+
+      it("responds with status code 400", async () => {
+        const expected = 400
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actual = res.status
+
+        expect(actual).toBe(expected)
+      })
+
+      it("returns 'location is required' when missing", async () => {
+        const expected = /location is required/i
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
+
+      it("returns 'invalid location' when too long/short", async () => {
+        const expected = /invalid location/i
+
+        newClass.location = "a"
+        let res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        expect(res.body.message).toMatch(expected)
+
+        newClass.location = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+        res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        expect(res.body.message).toMatch(expected)
+      })
+    })
+
+    describe("max class size errors", () => {
+      let newClass
+      beforeEach(() => {
+        newClass = {
+          name: "Wim Hof Method",
+          type: 4,
+          start_time: "08:00:00",
+          intensity: 1,
+          location: "Wim's Icebath Studio"
+        }
+      })
+
+      it("responds with status code 400", async () => {
+        const expected = 400
+        newClass.max_class_size = 5000
+
+        const res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        const actual = res.status
+
+        expect(actual).toBe(expected)
+      })
+
+      it("returns 'invalid class size' when too long/short/non-INT", async () => {
+        const expected = /invalid class size/i
+
+        newClass.max_class_size = "not a number"
+        let res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        expect(res.body.message).toMatch(expected)
+
+        newClass.max_class_size = 1
+        res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        expect(res.body.message).toMatch(expected)
+
+        newClass.max_class_size = 5000
+        res = await request(server)
+          .post("/api/classes")
+          .send(newClass)
+          .set("Authorization", token)
+        expect(res.body.message).toMatch(expected)
+      })
     })
   })
 })

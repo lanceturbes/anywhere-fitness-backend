@@ -18,12 +18,7 @@ router.get("/:id",
   async (req, res, next) => {
     try {
       const user = req.custom_user
-      res.status(200).json({
-        user_id: user.user_id,
-        name: user.first_name + " " + user.last_name,
-        email: user.email,
-        username: user.username
-      })
+      res.status(200).json(user)
     } catch (err) {
       next(err)
     }

@@ -95,8 +95,16 @@ async function add(newClass) {
   return await getById(newRecord.class_id)
 }
 
+async function addClient(class_client) {
+  const record = await db("classes_clients")
+    .insert(class_client)
+    .returning("*")
+  return record
+}
+
 module.exports = {
   add,
+  addClient,
   filterBy,
   getAll,
   getById

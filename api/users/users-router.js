@@ -25,4 +25,17 @@ router.get("/:id",
   }
 )
 
+router.get("/:id/classes",
+  checkUserId,
+  async (req, res, next) => {
+    try {
+      const { id } = req.params
+      const classRecords = await User.getClassesByUserId(id)
+      res.status(200).json(classRecords)
+    } catch (err) {
+      next(err)
+    }
+  }
+)
+
 module.exports = router

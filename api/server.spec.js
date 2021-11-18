@@ -3,6 +3,7 @@ const request = require("supertest")
 const server = require("./server")
 const db = require("../data/db-config")
 const { testUsers } = require("../data/seeds/005-users")
+const { testClasses } = require("./fitness-classes/test-classes")
 const { TEST_PASSWORD } = require("../config")
 
 // Wipe the test database before running any of the tests
@@ -353,32 +354,7 @@ describe("[GET] /api/classes", () => {
     expect(actual).toBe(expected)
   })
   it("returns an array of all current classes", async () => {
-    const expected = [
-      {
-        attendees: 47,
-        duration: 120,
-        id: 1,
-        instructor: "John Snow",
-        intensity: "high",
-        location: "The Wall",
-        max_class_size: 64,
-        name: "Castle Black Combat",
-        start_time: "06:00:00",
-        type: "strength"
-      },
-      {
-        attendees: 16,
-        duration: 40,
-        id: 2,
-        instructor: "Wayward Pooch",
-        intensity: "medium",
-        location: "Koopa Troopa Beach",
-        max_class_size: 32,
-        name: "Pooch's Run",
-        start_time: "10:00:00",
-        type: "endurance"
-      }
-    ]
+    const expected = testClasses
     const res = await request(server).get("/api/classes")
     const actual = res.body
     expect(actual).toEqual(expected)
@@ -477,7 +453,7 @@ describe("[POST] /api/classes", () => {
     it("returns a success message and the new class", async () => {
       const expectedMessage = /class created successfully/i
       const expectedClass = {
-        id: 3,
+        id: 6,
         name: "Wim Hof Method",
         instructor: "John Snow",
         type: "meditation",
@@ -919,5 +895,155 @@ describe("[POST] /api/classes", () => {
         expect(res.body.message).toMatch(expected)
       })
     })
+  })
+})
+
+describe("[GET] /api/users/:id/classes", () => {
+  describe("success", () => {
+    it("responds with status code 200", async () => {
+      const expected = 200
+
+      const res = await request(server)
+        .get("/api/users/1/classes")
+      const actual = res.status
+
+      expect(actual).toBe(expected)
+    })
+
+    it("returns an array of classes", async () => {
+      const expected = [
+        {
+          duration: 120,
+          id: 1,
+          intensity: "high",
+          location: "The Wall",
+          name: "Castle Black Combat",
+          start_time: "06:00:00"
+        }
+      ]
+
+      const res = await request(server)
+        .get("/api/users/2/classes")
+      const actual = res.body
+
+      expect(actual).toEqual(expected)
+    })
+  })
+
+  describe("failure", () => {
+    it("responds with status code 404", async () => {
+      const expected = 404
+      const res = await request(server)
+        .get("/api/users/100/classes")
+      const actual = res.status
+      expect(actual).toBe(expected)
+    })
+
+    it("returns messaage 'user not found'", async () => {
+      const expected = /user does not exist/i
+      const res = await request(server)
+        .get("/api/users/100/classes")
+      const actual = res.body.message
+      expect(actual).toMatch(expected)
+    })
+  })
+})
+
+describe("[GET] /api/classes/:id/join", () => {
+  let token
+  beforeEach(async () => {
+    const loginRes = await request(server)
+      .post("/api/auth/login")
+      .send({
+        username: "johnsnow",
+        password: TEST_PASSWORD
+      })
+    token = loginRes.body.token
+  })
+
+  describe("success", () => {
+    it("responds with status code 200", async () => {
+      const expected = 200
+
+      const res = await request(server)
+        .get("/api/classes/2/join")
+        .set("Authorization", token)
+      const actual = res.status
+
+      expect(actual).toBe(expected)
+    })
+
+    it("returns a success message", async () => {
+      const expected = /successfully joined class/i
+
+      const res = await request(server)
+        .get("/api/classes/2/join")
+        .set("Authorization", token)
+      const actual = res.body.message
+
+      expect(actual).toMatch(expected)
+    })
+
+    it("adds the user to the class's attendees", async () => {
+      const expected = 2
+
+      await request(server)
+        .get("/api/classes/2/join")
+        .set("Authorization", token)
+      const res = await request(server)
+        .get("/api/users/2/classes")
+      const actual = res.body
+
+      expect(actual).toHaveLength(expected)
+    })
+  })
+
+  describe("failure", () => {
+    describe("not logged in", () => {
+      it("responds with status code 401", async () => {
+        const expected = 401
+
+        const res = await request(server)
+          .get("/api/classes/2/join")
+        const actual = res.status
+
+        expect(actual).toBe(expected)
+      })
+
+      it("returns 'access denied' error", async () => {
+        const expected = /access denied/i
+
+        const res = await request(server)
+          .get("/api/classes/2/join")
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
+    })
+
+    describe("invalid class ID", () => {
+      it("responds with status code 404", async () => {
+        const expected = 404
+
+        const res = await request(server)
+          .get("/api/classes/500/join")
+          .set("Authorization", token)
+        const actual = res.status
+
+        expect(actual).toBe(expected)
+      })
+
+      it("returns 'class not found' error", async () => {
+        const expected = /class not found/i
+
+        const res = await request(server)
+          .get("/api/classes/500/join")
+          .set("Authorization", token)
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
+    })
+
   })
 })

@@ -178,6 +178,22 @@ ID | Category Name
 }
 ```
 
+### Join a Class
+
+This endpoint requires a token in the header to know who's making the request. Can be either a client or instructor, but **must be logged in**.
+
+**Endpoint**: `[GET] /api/classes/:id/join`
+
+**Parameters**: `:id` must be an integer, representing a fitness class's ID
+
+**Output**: returns a success message
+
+```
+{
+  "message": "Successfully joined class!"
+}
+```
+
 --------------------------------------------------------------------------------
 
 ## Users
@@ -228,4 +244,27 @@ Endpoints starting with `/api/users` are for fetching user information.
   "user_id": 3,
   "username": "ulfric-stormcloak"
 }
+```
+
+### Get Classes a User is Attending
+
+**Endpoint**: `[GET] /api/users/:id/classes`
+
+**Parameters**: `:id` must be an integer representing user ID
+
+**Output**: returns an array of classes a user is attending
+
+```
+[
+  {
+    "id": 3,
+    "duration": 60,
+    "instructor": "Super Mario",
+    "intensity": "low",
+    "location": "Your Happy Place",
+    "name": "Best Class Ever",
+    "start_time": "17:00:00",
+    "type": "meditation"
+  }
+]
 ```

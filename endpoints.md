@@ -132,7 +132,11 @@ Endpoints starting with `/api/classes` are related to fitness class information.
 
 ### Create New Class
 
-This endpoint is protected; you must send your requests with a login token in the request header, and that token must be valid (not expired, correctly formatted) and for a user account registered as an instructor. If you are not an instructor, you will receive an `access denied` message.
+This endpoint is protected; you must send your requests with a login token in the request header, and that token must be valid (not expired, correctly formatted) and for a user account registered as an instructor.
+
+If you are not an instructor, you will receive an `access denied` message.
+
+An instructor will be automatically added to the class's attendees list when successful.
 
 **Endpoint**: `[POST] /api/classes`
 

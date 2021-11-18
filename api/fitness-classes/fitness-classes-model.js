@@ -123,9 +123,23 @@ async function removeById(classId) {
   return deletedRecords
 }
 
+async function clientIsAttending(classId, clientId) {
+  const records = await db("classes_clients")
+    .where({
+      class_id: classId,
+      user_id: clientId
+    })
+  if (records.length !== 0) {
+    return true
+  } else {
+    return false
+  }
+}
+
 module.exports = {
   add,
   addClient,
+  clientIsAttending,
   filterBy,
   getAll,
   getById,

@@ -186,11 +186,11 @@ This endpoint requires a token in the header to know who's making the request. C
 
 **Parameters**: `:id` must be an integer, representing a fitness class's ID
 
-**Output**: returns a success message with the ID of the class that the user joined
+**Output**: returns a success message
 
 ```
 {
-  "message": "Successfully joined class #ID!"
+  "message": "Successfully joined class!"
 }
 ```
 

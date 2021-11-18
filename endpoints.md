@@ -180,7 +180,7 @@ ID | Category Name
 
 ### Join a Class
 
-This endpoint requires a token in the header to know who's making the request. Can be either a client or instructor, but **must be logged in**.
+This endpoint requires a token in the header to know who's making the request. Can be either a client or instructor, but **must be logged in**. If a user is already a member of the class they are trying to join, the request will fail.
 
 **Endpoint**: `[GET] /api/classes/:id/join`
 

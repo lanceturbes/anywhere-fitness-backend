@@ -83,7 +83,6 @@ async function getClassesByUserId(id) {
     .leftJoin("categories as ca",
       "ca.category_id", "cl.category_id")
     .select("cl.class_id as id",
-      "u.user_id as user_id",
       "cl.duration as duration",
       "cl.location as location",
       "cl.class_name as name",

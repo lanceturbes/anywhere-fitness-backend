@@ -20,7 +20,31 @@ const testUsers = [
     password: "$2a$06$yXnr8JSs12elY1zR.BefAeIcixSrKDbJFd3siM4SXGI8x8cAEORau",
     email: "thorin@mistymountain.com",
     first_name: "Thorin",
-    last_name: "Oakenshield"
+    last_name: "Oakenshield",
+    role_id: 2
+  },
+  {
+    username: "supermario",
+    password: "$2a$06$2pE7RtoPfDIRFnuzilMWNumcf2IRSlPTufKf/mSW.i.ZgrLDD5oe.",
+    email: "supermario@plumbers.com",
+    first_name: "Super",
+    last_name: "Mario",
+    role_id: 2
+  },
+  {
+    username: "mastermiyagi",
+    password: "$2a$06$EuAuhSiCf61izckz1UKamevf6YplNCQoDUw1Y3dCFSHyVCz0VvSMO",
+    email: "miyagi@karate.com",
+    first_name: "Master",
+    last_name: "Miyagi",
+    role_id: 2
+  },
+  {
+    username: "jackcooper",
+    password: "$2a$06$Ac9ESW/ZOwaY/jjzh28QFOJoxcnSEN.Kzuq20C5cXjpSNUY1sEHZ6",
+    email: "jackcooper@protectthepilot.com",
+    first_name: "Jack",
+    last_name: "Cooper",
   }
 ]
 

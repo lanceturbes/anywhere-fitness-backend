@@ -1,63 +1,62 @@
-const seedClasses = [
+exports.testClasses = [
   {
+    id: 1,
     attendees: 47,
-    category_id: 5,
-    class_name: "Castle Black Combat",
+    type: "strength",
+    name: "Castle Black Combat",
     duration: 120,
-    instructor_id: 2,
-    intensity: 3,
+    instructor: "John Snow",
+    intensity: "high",
     location: "The Wall",
     max_class_size: 64,
     start_time: "06:00:00"
   },
   {
+    id: 2,
     attendees: 16,
-    category_id: 2,
-    class_name: "Pooch's Run",
+    type: "endurance",
+    name: "Pooch's Run",
     duration: 40,
-    instructor_id: 1,
-    intensity: 2,
+    instructor: "Wayward Pooch",
+    intensity: "medium",
     location: "Koopa Troopa Beach",
     max_class_size: 32,
     start_time: "10:00:00"
   },
   {
+    id: 3,
     attendees: 9,
-    category_id: 4,
-    class_name: "Zen Fitness",
+    type: "meditation",
+    name: "Zen Fitness",
     duration: 30,
-    instructor_id: 5,
-    intensity: 1,
+    instructor: "Master Miyagi",
+    intensity: "low",
     location: "Miyagi's Studio",
     max_class_size: 20,
     start_time: "09:00:00"
   },
   {
+    id: 4,
     attendees: 25,
-    category_id: 1,
-    class_name: "Trembling Heights",
+    type: "balance",
+    name: "Trembling Heights",
     duration: 25,
-    instructor_id: 4,
-    intensity: 2,
+    instructor: "Super Mario",
+    intensity: "medium",
     location: "Rock Climbing Studio",
     max_class_size: 60,
     start_time: "12:00:00"
   },
   {
+    id: 5,
     attendees: 13,
-    category_id: 3,
-    class_name: "Stretching Your Pockets",
+    type: "flexibility",
+    name: "Stretching Your Pockets",
     duration: 100,
-    instructor_id: 3,
-    intensity: 3,
+    instructor: "Thorin Oakenshield",
+    intensity: "high",
     location: "Misty Mountain",
     max_class_size: 50,
     start_time: "14:00:00"
-  },
+  }
 ]
-
-function seed(knex) {
-  return knex("classes").insert(seedClasses)
-}
-
-module.exports = { seed, seedClasses }

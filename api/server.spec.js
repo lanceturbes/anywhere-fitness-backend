@@ -1049,20 +1049,86 @@ describe("[GET] /api/classes/:id/join", () => {
 
 
 describe("[DELETE] /api/classes/:id", () => {
-  describe("success", () => {
-    it.todo("responds with status code 200")
-    it.todo("returns a success message")
+  let token
+  beforeEach(async () => {
+    const loginRes = await request(server)
+      .post("/api/auth/login")
+      .send({
+        username: "johnsnow",
+        password: TEST_PASSWORD
+      })
+    token = loginRes.body.token
   })
+
+  describe("success", () => {
+    it("responds with status code 200", async () => {
+      const expected = 200
+
+      const res = await request(server)
+        .delete("/api/classes/1")
+        .set("Authorization", token)
+      const actual = res.status
+
+      expect(actual).toBe(expected)
+    })
+
+    it("returns a success message", async () => {
+      const expected = /class deleted successfully/i
+
+      const res = await request(server)
+        .delete("/api/classes/1")
+        .set("Authorization", token)
+      const actual = res.status
+
+      expect(actual).toMatch(expected)
+    })
+  })
+
 
   describe("failure", () => {
     describe("unauthorized", () => {
-      it.todo("responds with status code 401")
-      it.todo("returns 'access denied' error")
+      it("responds with status code 401", async () => {
+        const expected = 401
+
+        const res = await request(server)
+          .delete("/api/classes/1")
+        const actual = res.status
+
+        expect(actual).toBe(expected)
+      })
+
+      it("returns 'access denied' error", async () => {
+        const expected = /access denied/i
+
+        const res = await request(server)
+          .delete("/api/classes/1")
+          .set("Authorization", "badwrong")
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
     })
 
     describe("invalid class ID", () => {
-      it.todo("responds with status code 404")
-      it.todo("returns 'class not found' error")
+      it("responds with status code 404", async () => {
+        const expected = 404
+
+        const res = await request(server)
+          .delete("/api/classes/121")
+        const actual = res.status
+
+        expect(actual).toBe(expected)
+      })
+
+      it("returns 'class does not exist' error", async () => {
+        const expected = /class does not exist found/i
+
+        const res = await request(server)
+          .delete("/api/classes/121")
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
     })
   })
 })

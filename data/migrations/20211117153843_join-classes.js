@@ -12,9 +12,11 @@ exports.up = function (knex) {
       table.foreign("class_id")
         .references("class_id")
         .on("classes")
+        .onDelete("CASCADE")
       table.foreign("user_id")
         .references("user_id")
         .on("users")
+        .onDelete("CASCADE")
     })
 }
 

@@ -102,10 +102,19 @@ async function addClient(class_client) {
   return record
 }
 
+async function removeById(classId) {
+  const deletedRecords = await db("classes")
+    .where({ class_id: classId })
+    .del()
+    .returning(["class_id"])
+  return deletedRecords
+}
+
 module.exports = {
   add,
   addClient,
   filterBy,
   getAll,
-  getById
+  getById,
+  removeById
 }

@@ -5,7 +5,7 @@ const { validateNewFitnessClass } = require("../middleware/validate-class")
 const checkIfLoggedIn = require("../middleware/check-logged-in")
 const decodeToken = require("../auth/token-decoder")
 const { JWT_SECRET } = require("../../config")
-const checkIfInstructor = require("../middleware/check-instructor")
+const { checkIfInstructor, checkIfClassOwner } = require("../middleware/check-instructor")
 const checkClassNameTaken = require("../middleware/check-classname-taken")
 
 router.get("/",
@@ -77,6 +77,22 @@ router.get("/:id/join",
       await FitnessClass.addClient({ user_id, class_id })
       res.status(200).json({
         message: "Successfully joined class!"
+      })
+    } catch (err) {
+      next(err)
+    }
+  }
+)
+
+router.delete("/:id",
+  checkFitnessClassId,
+  checkIfClassOwner,
+  async (req, res, next) => {
+    try {
+      const class_id = req.params.id
+      await FitnessClass.removeById(class_id)
+      res.status(200).json({
+        message: "Successfully deleted class!"
       })
     } catch (err) {
       next(err)

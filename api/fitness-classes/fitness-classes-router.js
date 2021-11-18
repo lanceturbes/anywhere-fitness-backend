@@ -56,7 +56,8 @@ router.post("/",
         classInfo.max_class_size = nc.max_class_size
       }
 
-      const fitnessClass = await FitnessClass.add(classInfo)
+      const fitnessClass = await FitnessClass
+        .add(classInfo, userInfo.user_id)
       res.status(201).json({
         message: "Class created successfully!",
         newClass: fitnessClass

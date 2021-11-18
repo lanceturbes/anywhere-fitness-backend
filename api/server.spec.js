@@ -475,6 +475,20 @@ describe("[POST] /api/classes", () => {
       expect(actualMessage).toMatch(expectedMessage)
       expect(actualClass).toEqual(expectedClass)
     })
+
+    it("adds the class to the instructor's class list", async () => {
+      const expected = 2
+
+      await request(server)
+        .post("/api/classes")
+        .send(newClass)
+        .set("Authorization", token)
+      const res = await request(server)
+        .get("/api/users/2/classes")
+      const actual = res.body
+
+      expect(actual).toHaveLength(expected)
+    })
   })
 
   describe("failure", () => {

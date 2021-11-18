@@ -88,11 +88,24 @@ async function filterBy(filter) {
   }
 }
 
-async function add(newClass) {
-  const [newRecord] = await db("classes")
-    .insert(newClass)
-    .returning(["class_id"])
-  return await getById(newRecord.class_id)
+async function add(classToAdd, instructorId) {
+  let newClass
+  await db.transaction(async trx => {
+    // Create new class
+    const [newRecord] = await trx("classes")
+      .insert(classToAdd)
+      .returning(["class_id"])
+    const classId = newRecord.class_id
+    newClass = getById(classId)
+
+    // Add the instructor to the new class
+    await trx("classes_clients")
+      .insert({
+        user_id: instructorId,
+        class_id: classId
+      })
+  })
+  return newClass
 }
 
 async function addClient(class_client) {

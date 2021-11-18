@@ -1050,7 +1050,7 @@ describe("[GET] /api/classes/:id/join", () => {
 
 describe("[DELETE] /api/classes/:id", () => {
   let token
-  beforeEach(async () => {
+  beforeAll(async () => {
     const loginRes = await request(server)
       .post("/api/auth/login")
       .send({
@@ -1081,6 +1081,19 @@ describe("[DELETE] /api/classes/:id", () => {
       const actual = res.body.message
 
       expect(actual).toMatch(expected)
+    })
+
+    it("can delete a class from db", async () => {
+      const expected = 4
+
+      await request(server)
+        .delete("/api/classes/1")
+        .set("Authorization", token)
+      const res = await request(server)
+        .get("/api/classes")
+      const actual = res.body
+
+      expect(actual).toHaveLength(expected)
     })
   })
 

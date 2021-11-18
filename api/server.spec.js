@@ -948,3 +948,102 @@ describe("[GET] /api/users/:id/classes", () => {
     })
   })
 })
+
+describe("[GET] /api/classes/:id/join", () => {
+  let token
+  beforeEach(async () => {
+    const loginRes = await request(server)
+      .post("/api/auth/login")
+      .send({
+        username: "johnsnow",
+        password: TEST_PASSWORD
+      })
+    token = loginRes.body.token
+  })
+
+  describe("success", () => {
+    it("responds with status code 200", async () => {
+      const expected = 200
+
+      const res = await request(server)
+        .get("/api/classes/2/join")
+        .set("Authorization", token)
+      const actual = res.status
+
+      expect(actual).toBe(expected)
+    })
+
+    it("returns a success message", async () => {
+      const expected = /successfully joined class/i
+
+      const res = await request(server)
+        .get("/api/classes/2/join")
+        .set("Authorization", token)
+      const actual = res.body.message
+
+      expect(actual).toMatch(expected)
+    })
+
+    it("adds the user to the class's attendees", async () => {
+      const expected = 2
+
+      await request(server)
+        .get("/api/classes/2/join")
+        .set("Authorization", token)
+      const res = await request(server)
+        .get("/api/users/2/classes")
+      const actual = res.body
+
+      expect(actual).toHaveLength(expected)
+    })
+  })
+
+  describe("failure", () => {
+    describe("not logged in", () => {
+      it("responds with status code 401", async () => {
+        const expected = 401
+
+        const res = await request(server)
+          .get("/api/classes/2/join")
+        const actual = res.status
+
+        expect(actual).toBe(expected)
+      })
+
+      it("returns 'access denied' error", async () => {
+        const expected = /access denied/i
+
+        const res = await request(server)
+          .get("/api/classes/2/join")
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
+    })
+
+    describe("invalid class ID", () => {
+      it("responds with status code 404", async () => {
+        const expected = 404
+
+        const res = await request(server)
+          .get("/api/classes/500/join")
+          .set("Authorization", token)
+        const actual = res.status
+
+        expect(actual).toBe(expected)
+      })
+
+      it("returns 'class not found' error", async () => {
+        const expected = /class not found/i
+
+        const res = await request(server)
+          .get("/api/classes/500/join")
+          .set("Authorization", token)
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
+    })
+
+  })
+})

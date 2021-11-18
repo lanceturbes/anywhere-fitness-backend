@@ -178,6 +178,22 @@ ID | Category Name
 }
 ```
 
+### Join a Class
+
+This endpoint requires a token in the header to know who's making the request. Can be either a client or instructor, but **must be logged in**.
+
+**Endpoint**: `[GET] /api/classes/:id/join`
+
+**Parameters**: `:id` must be an integer, representing a fitness class's ID
+
+**Output**: returns a success message with the ID of the class that the user joined
+
+```
+{
+  "message": "Successfully joined class #ID!"
+}
+```
+
 --------------------------------------------------------------------------------
 
 ## Users

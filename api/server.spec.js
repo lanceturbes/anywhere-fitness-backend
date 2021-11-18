@@ -965,7 +965,7 @@ describe("[GET] /api/users/:id/classes", () => {
 
 describe("[GET] /api/classes/:id/join", () => {
   let token
-  beforeEach(async () => {
+  beforeAll(async () => {
     const loginRes = await request(server)
       .post("/api/auth/login")
       .send({
@@ -1052,6 +1052,30 @@ describe("[GET] /api/classes/:id/join", () => {
 
         const res = await request(server)
           .get("/api/classes/500/join")
+          .set("Authorization", token)
+        const actual = res.body.message
+
+        expect(actual).toMatch(expected)
+      })
+    })
+
+    describe("already attending", () => {
+      it("responds with status code 400", async () => {
+        const expected = 400
+
+        const res = await request(server)
+          .get("/api/classes/1/join")
+          .set("Authorization", token)
+        const actual = res.status
+
+        expect(actual).toBe(expected)
+      })
+
+      it("returns 'already attending' error", async () => {
+        const expected = /already attending/i
+
+        const res = await request(server)
+          .get("/api/classes/1/join")
           .set("Authorization", token)
         const actual = res.body.message
 

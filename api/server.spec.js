@@ -1044,6 +1044,25 @@ describe("[GET] /api/classes/:id/join", () => {
         expect(actual).toMatch(expected)
       })
     })
+  })
+})
 
+
+describe("[DELETE] /api/classes/:id", () => {
+  describe("success", () => {
+    it.todo("responds with status code 200")
+    it.todo("returns a success message")
+  })
+
+  describe("failure", () => {
+    describe("unauthorized", () => {
+      it.todo("responds with status code 401")
+      it.todo("returns 'access denied' error")
+    })
+
+    describe("invalid class ID", () => {
+      it.todo("responds with status code 404")
+      it.todo("returns 'class not found' error")
+    })
   })
 })

@@ -194,6 +194,22 @@ This endpoint requires a token in the header to know who's making the request. C
 }
 ```
 
+### Delete a Class
+
+This endpoint requires the person making the request to be the instructor who created the class; only instructors who actually made the class can delete it
+
+**Endpoint**: `[DELETE] /api/classes/:id`
+
+**Parameters**: `:id` must be an integer, representing a fitness class's ID
+
+**Output**: returns a success message
+
+```
+{
+  "message": "Successfully deleted class!"
+}
+```
+
 --------------------------------------------------------------------------------
 
 ## Users

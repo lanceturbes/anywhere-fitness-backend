@@ -16,4 +16,24 @@ function checkIfInstructor(req, res, next) {
   }
 }
 
-module.exports = checkIfInstructor
+function checkIfClassOwner(req, res, next) {
+  const instructor = req.custom_class.instructor
+
+  const token = req.headers.authorization
+  const tokenPayload = decodeToken(token, JWT_SECRET)
+  const { name } = tokenPayload
+
+  if (name !== instructor) {
+    next({
+      status: 401,
+      message: "access denied"
+    })
+  } else {
+    next()
+  }
+}
+
+module.exports = {
+  checkIfInstructor,
+  checkIfClassOwner
+}

@@ -1073,12 +1073,12 @@ describe("[DELETE] /api/classes/:id", () => {
     })
 
     it("returns a success message", async () => {
-      const expected = /class deleted successfully/i
+      const expected = /successfully deleted class/i
 
       const res = await request(server)
         .delete("/api/classes/1")
         .set("Authorization", token)
-      const actual = res.status
+      const actual = res.body.message
 
       expect(actual).toMatch(expected)
     })
@@ -1115,16 +1115,18 @@ describe("[DELETE] /api/classes/:id", () => {
 
         const res = await request(server)
           .delete("/api/classes/121")
+          .set("Authorization", token)
         const actual = res.status
 
         expect(actual).toBe(expected)
       })
 
-      it("returns 'class does not exist' error", async () => {
-        const expected = /class does not exist found/i
+      it("returns 'class not found' error", async () => {
+        const expected = /class not found/i
 
         const res = await request(server)
           .delete("/api/classes/121")
+          .set("Authorization", token)
         const actual = res.body.message
 
         expect(actual).toMatch(expected)

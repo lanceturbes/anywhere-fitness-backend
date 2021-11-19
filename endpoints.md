@@ -228,24 +228,26 @@ Endpoints starting with `/api/users` are for fetching user information.
 
 ```
 [
+  ...
   {
-    "email": "willie@wonka.com",
-    "name": "Willie Wonka",
-    "user_id": 1,
-    "username": "willie-wonka"
+    "email": "johnsnow@castleblack.com",
+    "id": 2,
+    "name": "John Snow",
+    "username": "johnsnow"
   },
   {
-    "email": "pebbles@thecursediterator.net",
-    "name": "Five Pebbles",
-    "user_id": 2,
-    "username": "five-pebbles"
+    "email": "thorin@mistymountain.com",
+    "id": 3,
+    "name": "Thorin Oakenshield",
+    "username": "thorinoakenshield"
   },
   {
-    "email": "highking@windhelm.net",
-    "name": "Ulfric Stormcloak",
-    "user_id": 3,
-    "username": "ulfric-stormcloak"
-  }
+    "email": "supermario@plumbers.com",
+    "id": 4,
+    "name": "Super Mario",
+    "username": "supermario"
+  },
+  ...
 ]
 ```
 
@@ -259,10 +261,10 @@ Endpoints starting with `/api/users` are for fetching user information.
 
 ```
 {
-  "email": "highking@windhelm.net",
-  "name": "Ulfric Stormcloak",
-  "user_id": 3,
-  "username": "ulfric-stormcloak"
+  "email": "johnsnow@castleblack.com",
+  "id": 2,
+  "name": "John Snow",
+  "username": "johnsnow"
 }
 ```
 
@@ -277,14 +279,28 @@ Endpoints starting with `/api/users` are for fetching user information.
 ```
 [
   {
-    "id": 3,
-    "duration": 60,
-    "instructor": "Super Mario",
-    "intensity": "low",
-    "location": "Your Happy Place",
-    "name": "Best Class Ever",
-    "start_time": "17:00:00",
-    "type": "meditation"
+    "attendees": 47,
+    "duration": 120,
+    "id": 1,
+    "instructor": "Wayward Pooch",
+    "intensity": "high",
+    "location": "The Wall",
+    "max_class_size": 64,
+    "name": "Castle Black Combat",
+    "start_time": "06:00:00",
+    "type": "strength"
+  },
+  {
+    "attendees": 16,
+    "duration": 40,
+    "id": 2,
+    "instructor": "Wayward Pooch",
+    "intensity": "medium",
+    "location": "Koopa Troopa Beach",
+    "max_class_size": 32,
+    "name": "Pooch's Run",
+    "start_time": "10:00:00",
+    "type": "endurance"
   }
 ]
 ```

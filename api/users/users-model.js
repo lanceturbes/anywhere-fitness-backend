@@ -76,21 +76,40 @@ async function getClassesByUserId(id) {
   const classRecords = await db("classes as cl")
     .leftJoin("classes_clients as c_c",
       "cl.class_id", "c_c.class_id")
-    .leftJoin("users as u",
-      "c_c.user_id", "u.user_id")
+    .leftJoin("users as uc",
+      "c_c.user_id", "uc.user_id")
     .leftJoin("intensities as i",
       "i.intensity_id", "cl.intensity")
     .leftJoin("categories as ca",
       "ca.category_id", "cl.category_id")
+    .leftJoin("classes_instructors as c_i",
+      "c_i.instructor_id", "cl.instructor_id")
+    .leftJoin("users as ui",
+      "c_i.instructor_id", "ui.user_id")
     .select("cl.class_id as id",
       "cl.duration as duration",
       "cl.location as location",
       "cl.class_name as name",
       "cl.start_time as start_time",
-      "i.intensity_level as intensity")
-    .where({ "u.user_id": id })
+      "i.intensity_level as intensity",
+      "cl.attendees as attendees",
+      "uc.first_name as instructor_first_name",
+      "uc.last_name as instructor_last_name",
+      "cl.max_class_size as max_class_size",
+      "ca.category_name as type")
+    .where({ "uc.user_id": id })
     .orderBy("id")
-  return classRecords
+
+  return classRecords.map(record => {
+    const cleanedRecord = {
+      ...record,
+      instructor: record.instructor_first_name +
+        " " + record.instructor_last_name
+    }
+    delete cleanedRecord.instructor_first_name
+    delete cleanedRecord.instructor_last_name
+    return cleanedRecord
+  })
 }
 
 module.exports = {

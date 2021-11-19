@@ -925,16 +925,7 @@ describe("[GET] /api/users/:id/classes", () => {
     })
 
     it("returns an array of classes", async () => {
-      const expected = [
-        {
-          duration: 120,
-          id: 1,
-          intensity: "high",
-          location: "The Wall",
-          name: "Castle Black Combat",
-          start_time: "06:00:00"
-        }
-      ]
+      const expected = [testClasses[0]]
 
       const res = await request(server)
         .get("/api/users/2/classes")

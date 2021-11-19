@@ -61,12 +61,16 @@ async function getById(id) {
 
 async function filterBy(filter) {
   const classes = await db("classes as cl")
-    .leftJoin("users as u",
-      "cl.instructor_id", "u.user_id")
+    .leftJoin("users as uc",
+      "cl.instructor_id", "uc.user_id")
     .leftJoin("intensities as i",
       "cl.intensity", "i.intensity_id")
     .leftJoin("categories as ca",
       "cl.category_id", "ca.category_id")
+    .leftJoin("classes_instructors as c_i",
+      "c_i.instructor_id", "cl.instructor_id")
+    .leftJoin("users as ui",
+      "c_i.instructor_id", "ui.user_id")
     .where(filter)
   if (classes.length > 0) {
     return classes.map(fc => {

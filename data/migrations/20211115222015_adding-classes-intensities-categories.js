@@ -26,8 +26,6 @@ async function up(knex) {
         .notNullable()
       table.integer("duration")
         .defaultTo(60)
-      table.integer("attendees")
-        .defaultTo(0)
       table.integer("max_class_size")
         .defaultTo(30)
       table.time("start_time")

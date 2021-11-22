@@ -1,7 +1,7 @@
 exports.testClasses = [
   {
     id: 1,
-    attendees: 47,
+    attendees: 3,
     type: "strength",
     name: "Castle Black Combat",
     duration: 120,
@@ -13,7 +13,7 @@ exports.testClasses = [
   },
   {
     id: 2,
-    attendees: 16,
+    attendees: 1,
     type: "endurance",
     name: "Pooch's Run",
     duration: 40,
@@ -25,7 +25,7 @@ exports.testClasses = [
   },
   {
     id: 3,
-    attendees: 9,
+    attendees: 1,
     type: "meditation",
     name: "Zen Fitness",
     duration: 30,
@@ -37,7 +37,7 @@ exports.testClasses = [
   },
   {
     id: 4,
-    attendees: 25,
+    attendees: 1,
     type: "balance",
     name: "Trembling Heights",
     duration: 25,
@@ -49,7 +49,7 @@ exports.testClasses = [
   },
   {
     id: 5,
-    attendees: 13,
+    attendees: 1,
     type: "flexibility",
     name: "Stretching Your Pockets",
     duration: 100,

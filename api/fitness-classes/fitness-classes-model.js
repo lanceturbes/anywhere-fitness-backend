@@ -9,11 +9,20 @@ async function getAll() {
     .leftJoin("categories as ca",
       "cl.category_id", "ca.category_id")
     .orderBy("class_id")
+
+  const classAttendeeTally = await db("classes as cl")
+    .select("cl.class_id as class_id")
+    .count("cl.class_id as attendees")
+    .leftJoin("classes_clients as c_c",
+      "cl.class_id", "c_c.class_id")
+    .groupBy("cl.class_id")
+    .orderBy("cl.class_id")
+
   if (fitnessClasses.length > 0) {
-    const displayedClasses = fitnessClasses.map(fc => {
+    const displayedClasses = fitnessClasses.map((fc, index) => {
       return {
-        attendees: fc.attendees,
         id: fc.class_id,
+        attendees: parseInt(classAttendeeTally[index].attendees),
         duration: fc.duration,
         instructor: fc.first_name + " " + fc.last_name,
         intensity: fc.intensity_level,
@@ -40,11 +49,22 @@ async function getById(id) {
       "cl.category_id", "ca.category_id")
     .where({ class_id: id })
     .first()
+
+  const classAttendeeTally = await db("classes as cl")
+    .select("cl.class_id as class_id")
+    .count("cl.class_id as attendees")
+    .leftJoin("classes_clients as c_c",
+      "cl.class_id", "c_c.class_id")
+    .groupBy("cl.class_id")
+    .orderBy("cl.class_id")
+    .where({ "cl.class_id": id })
+    .first()
+
   if (fitnessClass) {
     const fc = fitnessClass
     return {
-      attendees: fc.attendees,
       id: fc.class_id,
+      attendees: parseInt(classAttendeeTally.attendees),
       duration: fc.duration,
       instructor: fc.first_name + " " + fc.last_name,
       intensity: fc.intensity_level,
@@ -72,11 +92,21 @@ async function filterBy(filter) {
     .leftJoin("users as ui",
       "c_i.instructor_id", "ui.user_id")
     .where(filter)
+
+  const classAttendeeTally = await db("classes as cl")
+    .select("cl.class_id as class_id")
+    .count("cl.class_id as attendees")
+    .leftJoin("classes_clients as c_c",
+      "cl.class_id", "c_c.class_id")
+    .groupBy("cl.class_id")
+    .orderBy("cl.class_id")
+    .where(filter)
+
   if (classes.length > 0) {
     return classes.map(fc => {
       return {
-        attendees: fc.attendees,
         id: fc.class_id,
+        attendees: parseInt(classAttendeeTally.attendees),
         duration: fc.duration,
         instructor: `${fc.first_name} ${fc.last_name}`,
         intensity: fc.intensity_level,

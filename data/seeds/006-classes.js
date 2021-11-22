@@ -1,6 +1,5 @@
 const seedClasses = [
   {
-    attendees: 47,
     category_id: 5,
     class_name: "Castle Black Combat",
     duration: 120,
@@ -11,7 +10,6 @@ const seedClasses = [
     start_time: "06:00:00"
   },
   {
-    attendees: 16,
     category_id: 2,
     class_name: "Pooch's Run",
     duration: 40,
@@ -22,7 +20,6 @@ const seedClasses = [
     start_time: "10:00:00"
   },
   {
-    attendees: 9,
     category_id: 4,
     class_name: "Zen Fitness",
     duration: 30,
@@ -33,7 +30,6 @@ const seedClasses = [
     start_time: "09:00:00"
   },
   {
-    attendees: 25,
     category_id: 1,
     class_name: "Trembling Heights",
     duration: 25,
@@ -44,7 +40,6 @@ const seedClasses = [
     start_time: "12:00:00"
   },
   {
-    attendees: 13,
     category_id: 3,
     class_name: "Stretching Your Pockets",
     duration: 100,

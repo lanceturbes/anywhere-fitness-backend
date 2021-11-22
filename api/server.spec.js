@@ -371,7 +371,7 @@ describe("[GET] /api/classes/:id", () => {
     })
     it("returns fitness class object of the given ID", async () => {
       const expected = {
-        attendees: 16,
+        attendees: 1,
         duration: 40,
         id: 2,
         instructor: "Wayward Pooch",
@@ -461,7 +461,7 @@ describe("[POST] /api/classes", () => {
         intensity: "low",
         location: "Wim's Icebath Studio",
         max_class_size: 30,
-        attendees: 0,
+        attendees: 1,
         duration: 60
       }
 
@@ -944,7 +944,7 @@ describe("[GET] /api/users/:id/classes", () => {
       expect(actual).toBe(expected)
     })
 
-    it("returns messaage 'user not found'", async () => {
+    it("returns message 'user not found'", async () => {
       const expected = /user does not exist/i
       const res = await request(server)
         .get("/api/users/100/classes")

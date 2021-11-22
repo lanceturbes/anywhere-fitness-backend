@@ -168,7 +168,7 @@ ID | Category Name
 {
   "message": "Class created successfully!",
   "newClass": {
-    "attendees": 0,
+    "attendees": 1,
     "id": 3,
     "duration": 60,
     "instructor": "Super Mario",
